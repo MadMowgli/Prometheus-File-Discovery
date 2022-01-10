@@ -212,6 +212,7 @@
             public string scrape_timeout { get; set; }
             public string body_size_limit { get; set; }
             public int sample_limit { get; set; }
+            // Important
             public string metrics_path { get; set; }
             public string scheme { get; set; }
             public Tls_Config tls_config { get; set; }
