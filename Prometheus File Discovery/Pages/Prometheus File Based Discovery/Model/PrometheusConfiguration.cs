@@ -4,7 +4,7 @@
     {
 
         // Properties
-        public double Version { get; set; }
+        public double Version { get; set; } = 0.0;
         public ConfigurationComponents.Global global { get; set; }
         public List<string> rule_files { get; set; }
         public ConfigurationComponents.Remote_Write remote_write { get; set; }
@@ -14,10 +14,10 @@
 
 
         // Constructor
-        public PrometheusConfiguration(double Version)
-        {
-            this.Version = Version;
-        }
+        //public PrometheusConfiguration(double Version)
+        //{
+        //    this.Version = Version;
+        //}
 
 
         // Methods

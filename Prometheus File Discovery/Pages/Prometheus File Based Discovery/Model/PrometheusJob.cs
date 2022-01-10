@@ -54,6 +54,32 @@
         }
 
         // Properties
+        public string JobName { get { return _job_name; } set { _job_name = value; } }
+        public string Scrape_Interval { get { return _scrape_interval;} set { _scrape_interval = value; } }
+        public string Scrape_Timeout { get { return _scrape_timeout;} set { _scrape_timeout = value; } }
+        public string Metrics_path { get { return _metrics_path; } set { _metrics_path = value; } }
+        public string Scheme { get { return _scheme; } set { _scheme = value; } }
+        public List<string> Targets { get { return _targets; } set { _targets = value; } }
+        public Dictionary<string, string> Labels { get { return _labels;  } set { _labels = value; } }
+
+        // Custom Methods
+        public void addLabel(string key, string value)
+        {
+            this.Labels.Add(key, value);
+        }
+        public void removeLabel(string key)
+        {
+            this.Labels.Remove(key);
+        }
+
+        public void addTarget(string target)
+        {
+            this.Targets.Add(target);
+        }
+        public void removeTarget(string target)
+        {
+            this.Targets.Remove(target);
+        }
 
     }
 }

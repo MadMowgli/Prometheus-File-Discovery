@@ -1,6 +1,8 @@
 ﻿<!-- Blazor Section -->
 @page "/PFBD_Admin"
+@inject HttpClient Http
 @using Prometheus_File_Discovery.Pages.Prometheus_File_Based_Discovery.Model
+@using Prometheus_File_Based_Discovery.Data.Example
 
 <!-- HTML Section -->
 <div class="container-fluid mt-3">
@@ -148,6 +150,8 @@
     private string? add_scheme { get; set; }
     private string? add_targets { get; set;  }
     private string? add_labels { get; set; }
+    private List<String> add_targetList { get; set; } = new List<string>();
+    private Dictionary<string, string> add_labelDict { get; set; } = new Dictionary<string, string>();
 
     private string? update_jobName { get; set; }
     private string? update_scrapeInterval { get; set; }
@@ -156,11 +160,18 @@
     private string? update_scheme { get; set; }
     private string? update_targets { get; set;  }
     private string? update_labels { get; set; }
+    private List<String> update_targetList { get; set; } = new List<string>();
+    private Dictionary<string, string> update_labelDict { get; set; } = new Dictionary<string, string>();
 
     private string? delete_jobName { get; set; }
 
-    private List<String> targetList { get; set; } = new List<string>();
-    private Dictionary<string, string> labelDict { get; set; } = new Dictionary<string, string>();
+    private PrometheusJSON.Rootobject? config {get; set; }
+
+    // Load data
+    protected override async Task OnInitializedAsync()
+    {
+        config = await Http.GetFromJsonAsync<PrometheusJSON.Rootobject>("sample-data/prometheus.json");
+    }
 
     // Methods
     public void addScrapingTarget()
@@ -175,12 +186,17 @@
         if (this.add_labels == null || this.add_labels.Equals("")) { this.add_labels = "label_1:value_1"; }
 
         // Fill up collections
-        this.targetList.AddRange(this.add_targets.Split(","));
+        this.add_targetList.AddRange(this.add_targets.Split(","));
         string[] splitLabels = this.add_labels.Split(":");
         for (int index = 0; index < splitLabels.Length; index+=2)
         {
-            this.labelDict.Add(splitLabels[index], splitLabels[index + 1]);
+            this.add_labelDict.Add(splitLabels[index], splitLabels[index + 1]);
         }
+
+        // Create new ProemtheusJob
+        PrometheusJob prometheusJob = new PrometheusJob(add_jobName, add_scrapeInterval, add_scrapeTimeout,
+                                                        add_metricsPath, add_scheme, add_targetList, add_labelDict);
+
 
         // Debug
         Console.WriteLine(this.add_jobName);
@@ -188,8 +204,18 @@
         Console.WriteLine(this.add_scrapeTimeout);
         Console.WriteLine(this.add_metricsPath);
         Console.WriteLine(this.add_scheme);
-        Console.WriteLine(this.targetList.ElementAt(0));
-        Console.WriteLine(this.labelDict[splitLabels[0]]);
+        Console.WriteLine(this.add_targetList.ElementAt(0));
+        Console.WriteLine(this.add_labelDict[splitLabels[0]]);
+
+        // JobObj Debug
+        Console.WriteLine(prometheusJob.JobName);
+        Console.WriteLine(prometheusJob.Scrape_Interval);
+
+        // API Debug
+        Console.WriteLine(config);
+
+        // Deserialize Debug
+        //readYamlConfig();
 
     }
 
@@ -205,12 +231,13 @@
         if (this.update_labels == null || this.update_labels.Equals("")) { this.update_labels = "label_1:value_1"; }
 
         // Fill up collections
-        this.targetList.AddRange(this.update_targets.Split(","));
+        this.update_targetList.AddRange(this.update_targets.Split(","));
         string[] splitLabels = this.update_labels.Split(":");
         for (int index = 0; index < splitLabels.Length; index+=2)
         {
-            this.labelDict.Add(splitLabels[index], splitLabels[index + 1]);
+            this.update_labelDict.Add(splitLabels[index], splitLabels[index + 1]);
         }
+
 
         // Debug
         Console.WriteLine(this.update_jobName);
@@ -218,12 +245,26 @@
         Console.WriteLine(this.update_scrapeTimeout);
         Console.WriteLine(this.update_metricsPath);
         Console.WriteLine(this.update_scheme);
-        Console.WriteLine(this.targetList.ElementAt(0));
-        Console.WriteLine(this.labelDict[splitLabels[0]]);
+        Console.WriteLine(this.update_targetList.ElementAt(0));
+        Console.WriteLine(this.update_labelDict[splitLabels[0]]);
     }
 
     public void removeScrapingTarget()
     {
+
+    }
+
+    public async void readYamlConfig()
+    {
+        // Read YAML from file
+        //text = await HttpClient.GetStringAsync("Example/PrometheusExampleConfiguration_Small.yml");
+        //PrometheusConfiguration deserializedConfig = PrometheusYamlDeserializer.desirializeToPrometheusConfiguration(text);
+
+        // Debug
+        //foreach(string rule_file in deserializedConfig.rule_files)
+        //{
+        //    Console.WriteLine(rule_file);
+        //}
 
     }
 
