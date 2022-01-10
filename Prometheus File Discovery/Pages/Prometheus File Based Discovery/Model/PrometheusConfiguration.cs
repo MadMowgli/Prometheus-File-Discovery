@@ -21,16 +21,16 @@
 
 
         // Methods
-        public void loadConfiguration(PrometheusConfiguration prometheusConfiguration)
-        {
-            this.Version = prometheusConfiguration.Version;
-            this.global = prometheusConfiguration.global;
-            this.rule_files = prometheusConfiguration.rule_files;
-            this.remote_write = prometheusConfiguration.remote_write;
-            this.remote_read = prometheusConfiguration.remote_read;
-            this.scrape_configs = prometheusConfiguration.scrape_configs;
-            this.alerting = prometheusConfiguration.alerting;
-        }
+        //public void loadConfiguration(PrometheusConfiguration prometheusConfiguration)
+        //{
+        //    this.Version = prometheusConfiguration.Version;
+        //    this.global = prometheusConfiguration.global;
+        //    this.rule_files = prometheusConfiguration.rule_files;
+        //    this.remote_write = prometheusConfiguration.remote_write;
+        //    this.remote_read = prometheusConfiguration.remote_read;
+        //    this.scrape_configs = prometheusConfiguration.scrape_configs;
+        //    this.alerting = prometheusConfiguration.alerting;
+        //}
 
     }
 }

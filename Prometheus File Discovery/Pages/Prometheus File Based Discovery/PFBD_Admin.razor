@@ -1,28 +1,60 @@
 ﻿<!-- Blazor Section -->
 @page "/PFBD_Admin"
+@using Prometheus_File_Discovery.Pages.Prometheus_File_Based_Discovery.Model
 
 <!-- HTML Section -->
 <div class="container-fluid mt-3">
 
     <div class="row my-4">
-        <h1 class="display-5">Prometheus File Based SD Configurator</h1>
+        <h1 class="display-4">Prometheus File Based SD Configurator</h1>
     </div>
 
 
     <!-- Control Forms -->
-    <div class="row my-5 justify-content-around">
+    <div class="row my-5 justify-content-between">
 
         <!-- Add Scraping Target -->
         <div class="col-sm-3">
-            <div class"card">
-                <h5 class"card-header">Add Scraping Target</h5>
-                <div class"card-body">
-                    <div class="input-group input-group-sm mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input.group-text" id="basic-addon3">Job Name:</span>
-                            <input 
-                        </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>Add Scraping Target</h3>
+                </div>
+                <div class="card-body">
+                    <div class="input-group needs-validation input-group-sm mb-3">
+                        <span class="input-group-text" id="basic-addon1">Job Name</span>
+                        <input type="text" class="form-control" @bind="@add_jobName" placeholder="Job Name" aria-label="Job Name" aria-describedby="basic-addon1" required/>
                     </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text" id="basic-addon1">Targets</span>
+                        <input type="text" class="form-control" @bind="@add_targets" placeholder="192.168.0.1:8000, 192.168.1.1:3000" aria-label="Scrape Interval" aria-describedby="basic-addon1" />
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text" id="basic-addon1">Labels</span>
+                        <input type="text" class="form-control" @bind="@add_labels" placeholder="key:value, key2:value2" aria-label="Scrape Interval" aria-describedby="basic-addon1" />
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text" id="basic-addon1">Scrape Interval</span>
+                        <input type="text" class="form-control" @bind="@add_scrapeInterval" placeholder="10s" aria-label="Scrape Interval" aria-describedby="basic-addon1" />
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text" id="basic-addon1">Scrape Timeout</span>
+                        <input type="text" class="form-control" @bind="@add_scrapeTimeout" placeholder="5s" aria-label="Scrape Timeout" aria-describedby="basic-addon1" />
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text" id="basic-addon1">Metrics Path</span>
+                        <input type="text" class="form-control" @bind="@add_metricsPath" placeholder="/metrics" aria-label="Metrics Path" aria-describedby="basic-addon1" />
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <label class="input-group-text" for="inputGroupSelect01">Scheme</label>
+                        <select class="form-select" id="inputGroupSelect01">
+                            <option value="https">https</option>
+                            <option value="http">http</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="card-footer text-muted">
+                    <button type="button" class="btn btn-primary float-end" @onclick="addScrapingTarget">Add</button>
                 </div>
             </div>
 
@@ -31,12 +63,76 @@
         <!-- Update Scraping Target -->
         <div class="col-sm-3">
 
+            <div class="card">
+                <div class="card-header">
+                    <h3>Update Scraping Target</h3>
+                </div>
+                <div class="card-body">
+                    <div class="input-group input-group-sm mb-3">
+                        <label class="input-group-text" for="inputGroupSelect01">Job Name</label>
+                        <select class="form-select" id="inputGroupSelect01">
+                            <option value="https">placeholder</option>
+                            <option value="http">http</option>
+                        </select>
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text" id="basic-addon1">Targets</span>
+                        <input type="text" class="form-control" @bind="@update_targets" placeholder="192.168.0.1:8000, 192.168.1.1:3000" aria-label="Scrape Interval" aria-describedby="basic-addon1" />
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text" id="basic-addon1">Labels</span>
+                        <input type="text" class="form-control" @bind="@update_labels" placeholder="key:value, key2:value2" aria-label="Scrape Interval" aria-describedby="basic-addon1" />
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text" id="basic-addon1">Scrape Interval</span>
+                        <input type="text" class="form-control" @bind="@update_scrapeInterval" placeholder="10s" aria-label="Scrape Interval" aria-describedby="basic-addon1" />
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text" id="basic-addon1">Scrape Timeout</span>
+                        <input type="text" class="form-control" @bind="@update_scrapeTimeout" placeholder="5s" aria-label="Scrape Timeout" aria-describedby="basic-addon1" />
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text" id="basic-addon1">Metrics Path</span>
+                        <input type="text" class="form-control" @bind="@update_metricsPath" placeholder="/metrics" aria-label="Metrics Path" aria-describedby="basic-addon1" />
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <label class="input-group-text" for="inputGroupSelect01">Scheme</label>
+                        <select class="form-select" id="inputGroupSelect01">
+                            <option value="https">https</option>
+                            <option value="http">http</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="card-footer text-muted">
+                    <button type="button" class="btn btn-outline-primary float-end" @onclick="updateScrapingTarget">Update</button>
+                </div>
+            </div>
+
         </div>
 
         <!-- Remove Scraping Target -->
         <div class="col-sm-3">
 
+            <div class="card">
+                <div class="card-header">
+                    <h3>Remove Scraping Target</h3>
+                </div>
+                <div class="card-body">
+                    <div class="input-group input-group-sm mb-3">
+                        <label class="input-group-text" for="inputGroupSelect01">Job Name</label>
+                        <select class="form-select" id="inputGroupSelect01">
+                            <option value="https">placeholder</option>
+                            <option value="http">http</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="card-footer text-muted">
+                    <button type="button" class="btn btn-danger float-end" @onclick="removeScrapingTarget">Remove</button>
+                </div>
+            </div>
+
         </div>
+
 
     </div>
 
@@ -44,5 +140,93 @@
 
 <!-- Code Section-->
 @code {
+    // Fields
+    private string? add_jobName { get; set; }
+    private string? add_scrapeInterval { get; set; }
+    private string? add_scrapeTimeout { get; set; }
+    private string? add_metricsPath { get; set; }
+    private string? add_scheme { get; set; }
+    private string? add_targets { get; set;  }
+    private string? add_labels { get; set; }
+
+    private string? update_jobName { get; set; }
+    private string? update_scrapeInterval { get; set; }
+    private string? update_scrapeTimeout { get; set; }
+    private string? update_metricsPath { get; set; }
+    private string? update_scheme { get; set; }
+    private string? update_targets { get; set;  }
+    private string? update_labels { get; set; }
+
+    private string? delete_jobName { get; set; }
+
+    private List<String> targetList { get; set; } = new List<string>();
+    private Dictionary<string, string> labelDict { get; set; } = new Dictionary<string, string>();
+
+    // Methods
+    public void addScrapingTarget()
+    {
+        // Set defaults where necessary
+        if (this.add_jobName == null || this.add_jobName.Equals("")) { this.add_jobName = "JobDefault"; }
+        if (this.add_scrapeInterval == null || this.add_scrapeInterval.Equals("")) { this.add_scrapeInterval = "10s"; }
+        if (this.add_scrapeTimeout == null || this.add_scrapeTimeout.Equals("")) { this.add_scrapeTimeout = "5s"; }
+        if (this.add_metricsPath == null || this.add_metricsPath.Equals("")) { this.add_metricsPath = "/metrics"; }
+        if (this.add_scheme == null || this.add_scheme.Equals("")) { this.add_scheme = "https"; }
+        if (this.add_targets == null || this.add_targets.Equals("")) { this.add_targets = "192.168.0.1"; }
+        if (this.add_labels == null || this.add_labels.Equals("")) { this.add_labels = "label_1:value_1"; }
+
+        // Fill up collections
+        this.targetList.AddRange(this.add_targets.Split(","));
+        string[] splitLabels = this.add_labels.Split(":");
+        for (int index = 0; index < splitLabels.Length; index+=2)
+        {
+            this.labelDict.Add(splitLabels[index], splitLabels[index + 1]);
+        }
+
+        // Debug
+        Console.WriteLine(this.add_jobName);
+        Console.WriteLine(this.add_scrapeInterval);
+        Console.WriteLine(this.add_scrapeTimeout);
+        Console.WriteLine(this.add_metricsPath);
+        Console.WriteLine(this.add_scheme);
+        Console.WriteLine(this.targetList.ElementAt(0));
+        Console.WriteLine(this.labelDict[splitLabels[0]]);
+
+    }
+
+    public void updateScrapingTarget()
+    {
+        // Set defaults where necessary
+        if (this.update_jobName == null || this.update_jobName.Equals("")) { this.update_jobName = "JobDefault"; }
+        if (this.update_scrapeInterval == null || this.update_scrapeInterval.Equals("")) { this.update_scrapeInterval = "10s"; }
+        if (this.update_scrapeTimeout == null || this.update_scrapeTimeout.Equals("")) { this.update_scrapeTimeout = "5s"; }
+        if (this.update_metricsPath == null || this.update_metricsPath.Equals("")) { this.update_metricsPath = "/metrics"; }
+        if (this.update_scheme == null || this.update_scheme.Equals("")) { this.update_scheme = "https"; }
+        if (this.update_targets == null || this.update_targets.Equals("")) { this.update_targets = "192.168.0.1"; }
+        if (this.update_labels == null || this.update_labels.Equals("")) { this.update_labels = "label_1:value_1"; }
+
+        // Fill up collections
+        this.targetList.AddRange(this.update_targets.Split(","));
+        string[] splitLabels = this.update_labels.Split(":");
+        for (int index = 0; index < splitLabels.Length; index+=2)
+        {
+            this.labelDict.Add(splitLabels[index], splitLabels[index + 1]);
+        }
+
+        // Debug
+        Console.WriteLine(this.update_jobName);
+        Console.WriteLine(this.update_scrapeInterval);
+        Console.WriteLine(this.update_scrapeTimeout);
+        Console.WriteLine(this.update_metricsPath);
+        Console.WriteLine(this.update_scheme);
+        Console.WriteLine(this.targetList.ElementAt(0));
+        Console.WriteLine(this.labelDict[splitLabels[0]]);
+    }
+
+    public void removeScrapingTarget()
+    {
+
+    }
+
+
 
 }

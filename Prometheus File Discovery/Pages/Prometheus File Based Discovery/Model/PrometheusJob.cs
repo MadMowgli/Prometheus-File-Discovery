@@ -53,13 +53,6 @@
             _scheme = "https";
         }
 
-
-
-
-
-
-
-
         // Properties
 
     }
