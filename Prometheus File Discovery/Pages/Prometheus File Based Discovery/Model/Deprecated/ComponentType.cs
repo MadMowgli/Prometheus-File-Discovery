@@ -3,12 +3,12 @@
     public enum ComponentType
     {
 
-        Global,
-        Rule_Files,
-        Remote_Write,
-        Remote_Read,
-        Scrape_Configs,
-        Alerting
+        global,
+        rule_files,
+        remote_write,
+        remote_read,
+        scrape_configs,
+        alerting
 
     }
 }

@@ -5,11 +5,11 @@
 
         // Fields
         private ComponentType componentType;
-        private PrometheusConfiguration parent;
+        private PrometheusConfiguration_old parent;
         private Dictionary<string, object> properties;
 
         // Constructor
-        public ConfigurationComponent(ComponentType componentType, PrometheusConfiguration parent)
+        public ConfigurationComponent(ComponentType componentType, PrometheusConfiguration_old parent)
         {
             this.componentType = componentType;
             this.parent = parent;
@@ -23,7 +23,7 @@
             set { this.componentType = value; }
         }
 
-        public PrometheusConfiguration Parent
+        public PrometheusConfiguration_old Parent
         {
             get { return parent; }
             set { this.parent = value; }
@@ -35,30 +35,34 @@
             // Assign components properties based on component type
             switch(componentType)
             {
-                case ComponentType.Global:
+                case ComponentType.global:
                     this.properties.Add("scrape_interval", new string(""));
                     this.properties.Add("evaluation_interval", new string(""));
                     break;
 
-                case ComponentType.Rule_Files:
+                case ComponentType.rule_files:
                     // Not supported yet
                     break;
 
-                case ComponentType.Remote_Write:
+                case ComponentType.remote_write:
                     // Not supported yet
                     break;
 
-                case ComponentType.Remote_Read:
+                case ComponentType.remote_read:
                     // Not supported yet
                     break;
 
-                case ComponentType.Scrape_Configs:
+                case ComponentType.scrape_configs:
                     this.properties.Add("job_name", new string(""));
                     this.properties.Add("honor_labels", new bool());
                     this.properties.Add("scrape_interval", new string(""));
+
+                    // File configs
+                    this.properties.Add("file_sd_configs", new Dictionary<string, string>());
+                    this.properties["file_sd_configs"].Add("files", )
                     break;
 
-                case ComponentType.Alerting:
+                case ComponentType.alerting:
                     break;
             }
         }
