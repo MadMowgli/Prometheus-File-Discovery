@@ -1,5 +1,5 @@
 ﻿<!-- Blazor Section -->
-@page "/PFBD_Admin"
+@page "/PFBD_Admin."
 @inject HttpClient Http
 @using Prometheus_File_Discovery.Pages.Prometheus_File_Based_Discovery.Model
 @using Prometheus_File_Based_Discovery.Data.Example
@@ -20,12 +20,12 @@
 
             <div class="card">
                 <div class="card-header">
-                    <h3 class="text-center">Add Scraping Target</h3>
+                    <h3 class="text-center">Add</h3>
                 </div>
                 <div class="card-body">
                     <div class="input-group needs-validation input-group-sm mb-3">
                         <span class="input-group-text" id="basic-addon1">Job Name</span>
-                        <input type="text" class="form-control" @bind="@add_jobName" placeholder="Job Name" aria-label="Job Name" aria-describedby="basic-addon1" required/>
+                        <input type="text" class="form-control" @bind="@add_jobName" placeholder="Job Name" aria-label="Job Name" aria-describedby="basic-addon1" required />
                     </div>
                     <div class="input-group input-group-sm mb-3">
                         <span class="input-group-text" id="basic-addon1">Targets</span>
@@ -67,7 +67,7 @@
 
             <div class="card">
                 <div class="card-header">
-                    <h3 class="text-center">Update Scraping Target</h3>
+                    <h3 class="text-center">Update</h3>
                 </div>
                 <div class="card-body">
                     <div class="input-group input-group-sm mb-3">
@@ -117,7 +117,7 @@
 
             <div class="card">
                 <div class="card-header">
-                    <h3 class="text-center">Remove Scraping Target</h3>
+                    <h3 class="text-center">Remove</h3>
                 </div>
                 <div class="card-body">
                     <div class="input-group input-group-sm mb-3">
@@ -132,6 +132,22 @@
                     <button type="button" class="btn btn-danger float-end" @onclick="removeScrapingTarget">Remove</button>
                 </div>
             </div>
+
+            <!-- Upload configuration -->
+            <div class="card my-4">
+                <div class="card-header">
+                    <h3 class="text-center">Upload Configuration</h3>
+                </div>
+                <div class="card-body">
+                    <div class="input-group mb-3">
+                        <input type="file" class="form-control" id="inputGroupFile03" aria-describedby="inputGroupFileAddon03" aria-label="Upload">
+                    </div>
+                </div>
+                <div class="card-footer text-muted">
+                    <button type="button" class="btn btn-success float-end" @onclick="removeScrapingTarget">Upload</button>
+                </div>
+            </div>
+
 
         </div>
 
@@ -148,7 +164,7 @@
     private string? add_scrapeTimeout { get; set; }
     private string? add_metricsPath { get; set; }
     private string? add_scheme { get; set; }
-    private string? add_targets { get; set;  }
+    private string? add_targets { get; set; }
     private string? add_labels { get; set; }
     private List<String> add_targetList { get; set; } = new List<string>();
     private Dictionary<string, string> add_labelDict { get; set; } = new Dictionary<string, string>();
@@ -158,14 +174,14 @@
     private string? update_scrapeTimeout { get; set; }
     private string? update_metricsPath { get; set; }
     private string? update_scheme { get; set; }
-    private string? update_targets { get; set;  }
+    private string? update_targets { get; set; }
     private string? update_labels { get; set; }
     private List<String> update_targetList { get; set; } = new List<string>();
     private Dictionary<string, string> update_labelDict { get; set; } = new Dictionary<string, string>();
 
     private string? delete_jobName { get; set; }
 
-    private PrometheusJSON.Rootobject? config {get; set; }
+    private PrometheusJSON.Rootobject? config { get; set; }
 
     // Load data
     protected override async Task OnInitializedAsync()
@@ -188,7 +204,7 @@
         // Fill up collections
         this.add_targetList.AddRange(this.add_targets.Split(","));
         string[] splitLabels = this.add_labels.Split(":");
-        for (int index = 0; index < splitLabels.Length; index+=2)
+        for (int index = 0; index < splitLabels.Length; index += 2)
         {
             this.add_labelDict.Add(splitLabels[index], splitLabels[index + 1]);
         }
@@ -212,7 +228,7 @@
         Console.WriteLine(prometheusJob.Scrape_Interval);
 
         // API Debug
-        Console.WriteLine(config);
+        Console.WriteLine(config.scrape_configs[0].job_name);
 
         // Deserialize Debug
         //readYamlConfig();
@@ -233,7 +249,7 @@
         // Fill up collections
         this.update_targetList.AddRange(this.update_targets.Split(","));
         string[] splitLabels = this.update_labels.Split(":");
-        for (int index = 0; index < splitLabels.Length; index+=2)
+        for (int index = 0; index < splitLabels.Length; index += 2)
         {
             this.update_labelDict.Add(splitLabels[index], splitLabels[index + 1]);
         }
