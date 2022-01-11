@@ -3,6 +3,7 @@
 @inject HttpClient Http
 @using Prometheus_File_Discovery.Pages.Prometheus_File_Based_Discovery.Model
 @using Prometheus_File_Based_Discovery.Data.Example
+@using System.IO
 
 <!-- HTML Section -->
 <div class="container-fluid mt-3">
@@ -145,11 +146,11 @@
                         </div>
                         <div class="card-body border border-secondary">
                             <div class="input-group mb-3">
-                                <input type="file" class="form-control" id="inputGroupFile03" aria-describedby="inputGroupFileAddon03" aria-label="Upload">
+                                <InputFile OnChange="@OnInputFileChange"></InputFile>
                             </div>
                         </div>
                         <div class="card-footer text-muted">
-                            <button type="button" class="btn btn-warning float-end" @onclick="removeScrapingTarget">Upload</button>
+                            <button type="button" class="btn btn-warning float-end" @onclick="readFileUpload">Upload</button>
                         </div>
                     </div>
                 </div>
@@ -196,6 +197,10 @@
     private string? delete_jobName { get; set; }
 
     private PrometheusJSON.Rootobject? config { get; set; }
+
+    // File input fields
+    private string fileString = "No file selected";
+    private List<IBrowserFile> loadedFiles = new();
 
     // Load data
     protected override async Task OnInitializedAsync()
@@ -284,7 +289,7 @@
 
     }
 
-    public async void readYamlConfig()
+    public async void uploadConfiguration()
     {
         // Read YAML from file
         //text = await HttpClient.GetStringAsync("Example/PrometheusExampleConfiguration_Small.yml");
@@ -296,6 +301,32 @@
         //    Console.WriteLine(rule_file);
         //}
 
+    }
+
+
+    private void OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        Console.WriteLine("File upload detected");
+
+        // Load files into list
+        foreach (var file in e.GetMultipleFiles())
+        {
+            loadedFiles.Add(file);
+        }
+    }
+
+    public async void readFileUpload()
+    {
+        foreach(var file in loadedFiles)
+        {
+            Stream basicStream = file.OpenReadStream();
+            StreamReader streamReader = new StreamReader(basicStream);
+            string fileString = await streamReader.ReadToEndAsync();
+            Console.WriteLine(fileString);
+            basicStream.Close();
+            streamReader.Close();
+        }
+        
     }
 
 
