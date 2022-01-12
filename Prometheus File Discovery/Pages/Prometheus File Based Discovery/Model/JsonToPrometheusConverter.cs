@@ -130,6 +130,12 @@ namespace Prometheus_File_Discovery.Pages.Prometheus_File_Based_Discovery.Model
                     case "alerting":
                         // Create new configComponent
                         ConfigurationComponents.Alerting alerting = new ConfigurationComponents.Alerting();
+                        Console.WriteLine("Parsing alerting component...");
+
+                        foreach(dynamic val in property.Values())
+                        {
+                            Console.WriteLine("Alerting value: " + val.ToString() + ", type: " + val.GetType());
+                        }
 
                         // Assign new configComponent
                         prometheusConfiguration.alerting = alerting;
