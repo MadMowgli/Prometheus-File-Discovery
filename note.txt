@@ -1,7 +1,0 @@
-  // scrape_configs is a JObject that has a JArray as a JProperty
-  // inside this JArray are multiple JObjects (Prometheus Jobs)
-  // these JObjects have Jproperties, one of them being 'static_configs'
-  // the 'static_configs' Jproperty has a JArray ? as value
-  // this Jarray contains multiple Jobjects
-  // these JObjects contain JProperties, one of them being 'labels'
-  // the 'labels'-Jproperty contains a JObject itself
