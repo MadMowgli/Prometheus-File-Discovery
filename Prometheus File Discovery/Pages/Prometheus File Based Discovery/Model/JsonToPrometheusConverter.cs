@@ -118,26 +118,6 @@ namespace Prometheus_File_Discovery.Pages.Prometheus_File_Based_Discovery.Model
                                             }
                                         }
                                     }
-                                    //if (propName.Equals("file_sd_configs"))
-                                    //{
-                                    //    foreach (JObject val2 in prop.Values<object>())
-                                    //    {
-                                    //        foreach (var prop2 in val2.Properties())
-                                    //        {
-                                    //            string prop2Name = prop2.Name;
-
-                                    //            if (prop2Name.Equals("files"))
-                                    //            {
-                                    //                foreach (var prop3 in prop2.Values())
-                                    //                {
-                                    //                    Console.WriteLine(prop3.ToString());
-                                    //                }
-                                    //                // prometheusJob.File_Sd_Configs
-                                    //            }
-                                    //        }
-                                    //    }
-                                    //}
-
                                 }
                             }
                         }
