@@ -77,6 +77,7 @@
         // Custom Methods
         public void addLabel(string key, string value)
         {
+            if(this.Labels == null) { this.Labels = new Dictionary<string, string>(); }
             this.Labels.Add(key, value);
         }
         public void removeLabel(string key)
@@ -86,6 +87,7 @@
 
         public void addTarget(string target)
         {
+            if(this.Targets == null) { this.Targets = new List<string>(); } 
             this.Targets.Add(target);
         }
         public void removeTarget(string target)

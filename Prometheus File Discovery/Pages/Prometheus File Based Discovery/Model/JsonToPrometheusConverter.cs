@@ -88,9 +88,34 @@ namespace Prometheus_File_Discovery.Pages.Prometheus_File_Based_Discovery.Model
                                     if (propName.Equals("honor_labels")) { prometheusJob.Honor_Labels = Convert.ToBoolean(propValue); Console.WriteLine("Honor Labels: " + propValue); }
                                     if (propName.Equals("static_configs"))
                                     {
-                                        foreach (JArray arr2 in val.Values())
+                                        foreach (JObject jObj in val.Value)
                                         {
-                                            Console.WriteLine(arr2.ToString());
+                                            // Loop over each property
+                                            foreach (JProperty jProp in jObj.Properties())
+                                            {
+                                                string propName2 = jProp.Name;
+                                                if (propName2 == "targets")
+                                                {
+                                                    Console.WriteLine("Targets:");
+                                                    foreach(JValue jVal in jProp.Values())
+                                                    {
+                                                        prometheusJob.addTarget(jVal.ToString());
+                                                        Console.WriteLine(jVal.ToString());
+                                                    }
+                                                }
+
+                                                if (propName2 == "labels")
+                                                {
+                                                    Console.WriteLine("Labels:");
+                                                    foreach(dynamic jVal in jProp.Values())
+                                                    {
+                                                        string key = jVal.Name.ToString();
+                                                        string value = jVal.Value.ToString();
+                                                        Console.WriteLine(key + ":" + value);
+                                                        prometheusJob.addLabel(key, value);
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                     //if (propName.Equals("file_sd_configs"))
