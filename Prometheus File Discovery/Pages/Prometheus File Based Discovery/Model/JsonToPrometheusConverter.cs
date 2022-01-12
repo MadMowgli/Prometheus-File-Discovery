@@ -86,6 +86,13 @@ namespace Prometheus_File_Discovery.Pages.Prometheus_File_Based_Discovery.Model
                                     if (propName.Equals("scrape_interval")) { prometheusJob.Scrape_Interval = propValue; Console.WriteLine("Scrape Interval: " + propValue); }
                                     if (propName.Equals("scrape_timeout")) { prometheusJob.Scrape_Timeout = propValue; Console.WriteLine("Scrape Timeout: " + propValue); }
                                     if (propName.Equals("honor_labels")) { prometheusJob.Honor_Labels = Convert.ToBoolean(propValue); Console.WriteLine("Honor Labels: " + propValue); }
+                                    if (propName.Equals("static_configs"))
+                                    {
+                                        foreach (JArray arr2 in val.Values())
+                                        {
+                                            Console.WriteLine(arr2.ToString());
+                                        }
+                                    }
                                     //if (propName.Equals("file_sd_configs"))
                                     //{
                                     //    foreach (JObject val2 in prop.Values<object>())

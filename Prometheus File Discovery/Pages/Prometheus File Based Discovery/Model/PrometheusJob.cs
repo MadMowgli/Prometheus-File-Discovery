@@ -13,6 +13,7 @@
         private List<string>? _targets;
         private Dictionary<string, string>? _labels;
         private Dictionary<string, List<String>>? _file_sd_configs;
+        private Dictionary<string, List<String>>? _static_configs;
 
         // Constructor with no arguments
         public PrometheusJob()
@@ -71,6 +72,7 @@
         public List<string> Targets { get { return _targets; } set { _targets = value; } }
         public Dictionary<string, string> Labels { get { return _labels;  } set { _labels = value; } }
         public Dictionary<string, List<string>> File_Sd_Configs { get { return _file_sd_configs;  } set { _file_sd_configs = value;} }
+        public Dictionary<string, List<string>> Static_Configs { get; set; }
 
         // Custom Methods
         public void addLabel(string key, string value)
