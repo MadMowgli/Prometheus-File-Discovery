@@ -12,7 +12,7 @@ namespace Prometheus_File_Discovery.Pages.Prometheus_File_Based_Discovery.Model
 
 
         // Methods
-        public static void convertJsonToDotNet(dynamic dynamicConfig, PrometheusConfiguration prometheusConfiguration)
+        public static PrometheusConfiguration convertJsonToDotNet(dynamic dynamicConfig, PrometheusConfiguration prometheusConfiguration)
         {
 
             // dynamicConfig is a JObject
@@ -132,9 +132,102 @@ namespace Prometheus_File_Discovery.Pages.Prometheus_File_Based_Discovery.Model
                         ConfigurationComponents.Alerting alerting = new ConfigurationComponents.Alerting();
                         Console.WriteLine("Parsing alerting component...");
 
-                        foreach(dynamic val in property.Values())
+                        // Check if not empty
+                        if(property.HasValues)
                         {
-                            Console.WriteLine("Alerting value: " + val.ToString() + ", type: " + val.GetType());
+                            
+                            foreach(dynamic val in property.Values<dynamic>())
+                            {
+                                // Goes into the 'alertmanagers' object
+                                foreach (dynamic val2 in val.Values<dynamic>())
+                                {
+                                    ConfigurationComponents.Alertmanager alertManager = new ConfigurationComponents.Alertmanager();
+                                    Console.WriteLine("Alerting property name: " + val2.Name);
+                                    dynamic objType = val2.GetType();
+
+                                    // TODO: Multiple alertmanager-objects can be passed.
+                                    if (val2.GetType() == typeof(Newtonsoft.Json.Linq.JArray))
+                                    {
+                                        Console.WriteLine("Alerting value type: JArray");
+                                    }
+
+                                    // Single alertmanager-object
+                                    if (val2.GetType() == typeof(Newtonsoft.Json.Linq.JProperty))
+                                    {
+                                        Console.WriteLine("Alerting value type: JProperty");
+                                        
+                                        // Get values of alertmanagers object
+                                        foreach(dynamic val3 in val2.Values<dynamic>())
+                                        {
+                                            // val3 is JArray
+                                            // Console.WriteLine(val3.GetType());
+                                            // Console.WriteLine(val3.ToString());
+
+                                            foreach(dynamic arrVal in val3.Values<dynamic>())
+                                            {
+                                                //JArray contains Jobjects
+                                                foreach(dynamic arrObj in arrVal.Values<dynamic>())
+                                                {
+                                                    string arrObjName = arrObj.Name;
+
+                                                    // Scheme object
+                                                    if(arrObjName == "scheme")
+                                                    {
+                                                        Console.WriteLine("Alertmanager scheme: " + arrObj.Value.ToString());
+                                                        alertManager.scheme = arrObj.Value.ToString();
+                                                    }
+
+                                                    // Static_configs object
+                                                    ConfigurationComponents.Static_Configs static_Configs = new ConfigurationComponents.Static_Configs();
+                                                    if (arrObjName == "static_configs")
+                                                    {
+                                                        Console.WriteLine(arrObjName);
+                                                        foreach(JObject jObj in arrObj.Value)
+                                                        {
+                                                            // Console.WriteLine("JValue Type: " + jObj.GetType());
+                                                            // Loop over each property
+                                                            foreach (dynamic jProp in jObj.Properties())
+                                                            {
+                                                                string propName2 = jProp.Name;
+                                                                Console.WriteLine(propName2);
+                                                                if (propName2 == "targets")
+                                                                {
+                                                                    Console.WriteLine("Targets:");
+                                                                    foreach (JArray jVal in jProp.Values<dynamic>())
+                                                                    {
+                                                                        
+                                                                        foreach(dynamic jArrVal in jVal.Value<dynamic>())
+                                                                        {
+                                                                            Console.WriteLine(jArrVal.ToString());
+                                                                            static_Configs.targets.Add(jArrVal.ToString());
+                                                                        }
+                                                                    }
+                                                                }
+
+                                                                if (propName2 == "labels")
+                                                                {
+                                                                    Console.WriteLine("Labels:");
+                                                                    foreach (dynamic jVal in jProp.Values())
+                                                                    {
+                                                                        string key = jVal.Name.ToString();
+                                                                        string value = jVal.Value.ToString();
+                                                                        Console.WriteLine(key + ":" + value);
+                                                                        static_Configs.labels.Add(new ConfigurationComponents.Label(key, value));
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    alertManager.static_configs.Add(static_Configs);
+                                                }
+                                            }
+                                        }
+
+                                    }
+                                }
+                                
+
+                            }
                         }
 
                         // Assign new configComponent
@@ -145,6 +238,18 @@ namespace Prometheus_File_Discovery.Pages.Prometheus_File_Based_Discovery.Model
                     case "rule_files":
                         // Create new configComponent
                         List<string> ruleFiles = new List<string>();
+                        Console.WriteLine("Parsing rule_files component...");
+
+                        // Looop over property values
+                        foreach(JArray jArr in property.Values<dynamic>())
+                        {
+                            foreach(dynamic jArrVal in jArr.Value<dynamic>())
+                            {
+                                Console.WriteLine("Rule Files: " + jArrVal.ToString());
+                                ruleFiles.Add(jArrVal.ToString());
+                            }
+                           
+                        }
 
                         // Assign new configComponent
                         prometheusConfiguration.rule_files = ruleFiles;
@@ -153,6 +258,7 @@ namespace Prometheus_File_Discovery.Pages.Prometheus_File_Based_Discovery.Model
                 }
 
             }
+            return prometheusConfiguration;
         }
 
     }

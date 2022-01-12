@@ -25,25 +25,9 @@
             private string _scheme;
 
             // Properties
-            public string scheme
-            {
-                get { return _scheme; }
-                set
-                {
-                    if (!value.Equals("http") || !value.Equals("https"))
-                    {
-                        throw new Exception($"{nameof(value)} must be either 'http' or 'https'");
-                    }
-                }
-            }
-            public List<Static_Configs> static_configs { get; set; }
+            public string scheme { get; set; }
+            public List<Static_Configs> static_configs { get; set; } = new List<Static_Configs>();
 
-            // Constructor
-            public Alertmanager(string scheme, List<Static_Configs> static_configs)
-            {
-                this._scheme = scheme;
-                this.static_configs = static_configs;
-            }
         }
 
         public class Authorization
@@ -205,8 +189,9 @@
 
         public class Static_Configs
         {
-            public string[] targets { get; set; }
-            public dynamic labels { get; set; }
+            public List<string> targets { get; set; } = new List<string>();
+            public List<Label> labels { get; set; } = new List<Label>();
+
         }
 
         public class Scrape_Configs

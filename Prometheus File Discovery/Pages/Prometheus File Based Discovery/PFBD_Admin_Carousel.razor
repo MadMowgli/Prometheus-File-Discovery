@@ -304,7 +304,7 @@
         this.convertUploadToJson(this.fileString);
 
         // Convert to .Net object
-        JsonToPrometheusConverter.convertJsonToDotNet(this.dynamicConfig, this.prometheusConfiguration);
+        prometheusConfiguration = JsonToPrometheusConverter.convertJsonToDotNet(this.dynamicConfig, this.prometheusConfiguration);
 
     }
 
@@ -348,7 +348,7 @@
         serializer.Serialize(stringWriter, yamlObject);
 
         // DEBUG
-        Console.WriteLine(stringWriter.ToString());
+        // Console.WriteLine(stringWriter.ToString());
 
         // Create dynamic class out of JSON object
         this.dynamicConfig = JsonConvert.DeserializeObject(stringWriter.ToString());
