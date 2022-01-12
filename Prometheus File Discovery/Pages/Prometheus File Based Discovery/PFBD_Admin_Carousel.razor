@@ -4,12 +4,15 @@
 @using Prometheus_File_Discovery.Pages.Prometheus_File_Based_Discovery.Model
 @using Prometheus_File_Based_Discovery.Data.Example
 @using System.IO
+@using YamlDotNet.Serialization
+@using Newtonsoft.Json
+@using Newtonsoft.Json.Linq
 
 <!-- HTML Section -->
 <div class="container-fluid mt-3">
 
-    <div class="row my-4">
-        <h1 class="display-4">Prometheus File Based SD Configurator</h1>
+    <div class="row my-4 justify-content-center">
+        <h1 class="display-3 text-center text-muted">Prometheus Configurator</h1>
     </div>
 
 
@@ -150,7 +153,7 @@
                             </div>
                         </div>
                         <div class="card-footer text-muted">
-                            <button type="button" class="btn btn-warning float-end" @onclick="readFileUpload">Upload</button>
+                            <button type="button" class="btn btn-warning float-end" @onclick="uploadConfiguration">Upload</button>
                         </div>
                     </div>
                 </div>
@@ -196,16 +199,18 @@
 
     private string? delete_jobName { get; set; }
 
-    private PrometheusJSON.Rootobject? config { get; set; }
-
     // File input fields
-    private string fileString = "No file selected";
     private List<IBrowserFile> loadedFiles = new();
+    private dynamic? dynamicConfig {get; set; }
+    private string fileString { get; set; }
+
+    private PrometheusConfiguration prometheusConfiguration {get; set; } = new PrometheusConfiguration();
 
     // Load data
     protected override async Task OnInitializedAsync()
     {
-        config = await Http.GetFromJsonAsync<PrometheusJSON.Rootobject>("sample-data/prometheus.json");
+        // Load last config
+        // config = await Http.GetFromJsonAsync<PrometheusJSON.Rootobject>("sample-data/prometheus.json");
     }
 
     // Methods
@@ -247,7 +252,7 @@
         Console.WriteLine(prometheusJob.Scrape_Interval);
 
         // API Debug
-        Console.WriteLine(config.scrape_configs[0].job_name);
+        // Console.WriteLine(config.scrape_configs[0].job_name);
 
         // Deserialize Debug
         //readYamlConfig();
@@ -291,15 +296,15 @@
 
     public async void uploadConfiguration()
     {
-        // Read YAML from file
-        //text = await HttpClient.GetStringAsync("Example/PrometheusExampleConfiguration_Small.yml");
-        //PrometheusConfiguration deserializedConfig = PrometheusYamlDeserializer.desirializeToPrometheusConfiguration(text);
 
-        // Debug
-        //foreach(string rule_file in deserializedConfig.rule_files)
-        //{
-        //    Console.WriteLine(rule_file);
-        //}
+        // Read files
+        await this.readUpload();
+
+        // Convert to JSON
+        this.convertUploadToJson(this.fileString);
+
+        // Convert to .Net object
+        JsonToPrometheusConverter.convertJsonToDotNet(this.dynamicConfig, this.prometheusConfiguration);
 
     }
 
@@ -313,22 +318,43 @@
         {
             loadedFiles.Add(file);
         }
+
     }
 
-    public async void readFileUpload()
+    private async Task readUpload()
     {
         foreach(var file in loadedFiles)
         {
             Stream basicStream = file.OpenReadStream();
             StreamReader streamReader = new StreamReader(basicStream);
-            string fileString = await streamReader.ReadToEndAsync();
-            Console.WriteLine(fileString);
+            this.fileString = await streamReader.ReadToEndAsync();
+            //Console.WriteLine(this.fileString);
             basicStream.Close();
             streamReader.Close();
         }
-        
+
     }
 
+    private void convertUploadToJson(string fileString)
+    {
+        // Convert file input to YAML object
+        var deserializer = new Deserializer();
+        var stringReader = new StringReader(fileString);
+        var yamlObject = deserializer.Deserialize(stringReader);
 
+        // Convert YAML object to JSON object
+        var serializer = new Newtonsoft.Json.JsonSerializer();
+        StringWriter stringWriter = new StringWriter();
+        serializer.Serialize(stringWriter, yamlObject);
+
+        // DEBUG
+        Console.WriteLine(stringWriter.ToString());
+
+        // Create dynamic class out of JSON object
+        this.dynamicConfig = JsonConvert.DeserializeObject(stringWriter.ToString());
+
+    }
+
+    
 
 }

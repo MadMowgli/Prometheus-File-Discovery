@@ -111,17 +111,10 @@
         public class Global
         {
             // Properties
-            public string scrape_interval { get; set; }
-            public string evaluation_interval { get; set; }
-            public List<string> external_labels { get; set; }
+            public string? scrape_interval { get; set; }
+            public string? evaluation_interval { get; set; }
+            public List<string>? external_labels { get; set; }
 
-            // Construcor
-            public Global(string scrape_interval, string evaluation_interval, List<string> external_labels)
-            {
-                this.scrape_interval = scrape_interval;
-                this.evaluation_interval = evaluation_interval;
-                this.external_labels = external_labels;
-            }
         }
 
         public class Headers
@@ -132,6 +125,21 @@
         public class Http_Sd_Configs
         {
             public string url { get; set; }
+        }
+
+        public class Label
+        {
+            // Properties
+            public string? labelString { get; set; }
+            public string key { get; set; }
+            public string value { get; set; }
+
+            // Constructor
+            public Label(string key, string value)
+            {
+                this.key = key;
+                this.value = value;
+            }
         }
 
         public class Metric_Relabel_Configs
@@ -197,50 +205,50 @@
 
         public class Static_Configs
         {
-            public List<string> targets { get; set; }
-            public List<string> labels { get; set; }
+            public string[] targets { get; set; }
+            public dynamic labels { get; set; }
         }
 
         public class Scrape_Configs
         {
             public string job_name { get; set; }
-            public bool honor_labels { get; set; }
-            public bool honor_timestamps { get; set; }
-            public Authorization authorization { get; set; }
-            public Basic_Auth basic_auth { get; set; }
-            public string scrape_interval { get; set; }
-            public string scrape_timeout { get; set; }
-            public string body_size_limit { get; set; }
-            public int sample_limit { get; set; }
+            public bool? honor_labels { get; set; }
+            public bool? honor_timestamps { get; set; }
+            public Authorization? authorization { get; set; }
+            public Basic_Auth? basic_auth { get; set; }
+            public string? scrape_interval { get; set; }
+            public string? scrape_timeout { get; set; }
+            public string? body_size_limit { get; set; }
+            public int? sample_limit { get; set; }
             // Important
-            public string metrics_path { get; set; }
-            public string scheme { get; set; }
-            public Tls_Config tls_config { get; set; }
-            public List<File_Sd_Configs> file_sd_configs { get; set; }
-            public List<Static_Configs> static_configs { get; set; }
-            public List<Relabel_Configs> relabel_configs { get; set; }
-            public List<Dns_Sd_Configs> dns_sd_configs { get; set; }
-            public List<Metric_Relabel_Configs> metric_relabel_configs { get; set; }
-            public List<Consul_Sd_Configs> consul_sd_configs { get; set; }
-            public List<Kubernetes_Sd_Configs> kubernetes_sd_configs { get; set; }
-            public List<Kuma_Sd_Configs> kuma_sd_configs { get; set; }
-            public List<Marathon_Sd_Configs> marathon_sd_configs { get; set; }
-            public List<Ec2_Sd_Configs> ec2_sd_configs { get; set; }
-            public List<Lightsail_Sd_Configs> lightsail_sd_configs { get; set; }
-            public List<Azure_Sd_Configs> azure_sd_configs { get; set; }
-            public List<Nerve_Sd_Configs> nerve_sd_configs { get; set; }
-            public List<Http_Sd_Configs> http_sd_configs { get; set; }
-            public List<Triton_Sd_Configs> triton_sd_configs { get; set; }
-            public List<Digitalocean_Sd_Configs> digitalocean_sd_configs { get; set; }
-            public List<Docker_Sd_Configs> docker_sd_configs { get; set; }
-            public List<Dockerswarm_Sd_Configs> dockerswarm_sd_configs { get; set; }
-            public List<Openstack_Sd_Configs> openstack_sd_configs { get; set; }
-            public List<Puppetdb_Sd_Configs> puppetdb_sd_configs { get; set; }
-            public List<Hetzner_Sd_Configs> hetzner_sd_configs { get; set; }
-            public List<Eureka_Sd_Configs> eureka_sd_configs { get; set; }
-            public List<Scaleway_Sd_Configs> scaleway_sd_configs { get; set; }
-            public List<Linode_Sd_Configs> linode_sd_configs { get; set; }
-            public List<Uyuni_Sd_Configs> uyuni_sd_configs { get; set; }
+            public string? metrics_path { get; set; }
+            public string? scheme { get; set; }
+            public Tls_Config? tls_config { get; set; }
+            public List<File_Sd_Configs>? file_sd_configs { get; set; }
+            public List<Static_Configs>? static_configs { get; set; }
+            public List<Relabel_Configs>? relabel_configs { get; set; }
+            public List<Dns_Sd_Configs>? dns_sd_configs { get; set; }
+            public List<Metric_Relabel_Configs>? metric_relabel_configs { get; set; }
+            public List<Consul_Sd_Configs>? consul_sd_configs { get; set; }
+            public List<Kubernetes_Sd_Configs>? kubernetes_sd_configs { get; set; }
+            public List<Kuma_Sd_Configs>? kuma_sd_configs { get; set; }
+            public List<Marathon_Sd_Configs>? marathon_sd_configs { get; set; }
+            public List<Ec2_Sd_Configs>? ec2_sd_configs { get; set; }
+            public List<Lightsail_Sd_Configs>? lightsail_sd_configs { get; set; }
+            public List<Azure_Sd_Configs>? azure_sd_configs { get; set; }
+            public List<Nerve_Sd_Configs>? nerve_sd_configs { get; set; }
+            public List<Http_Sd_Configs>? http_sd_configs { get; set; }
+            public List<Triton_Sd_Configs>? triton_sd_configs { get; set; }
+            public List<Digitalocean_Sd_Configs>? digitalocean_sd_configs { get; set; }
+            public List<Docker_Sd_Configs>? docker_sd_configs { get; set; }
+            public List<Dockerswarm_Sd_Configs>? dockerswarm_sd_configs { get; set; }
+            public List<Openstack_Sd_Configs>? openstack_sd_configs { get; set; }
+            public List<Puppetdb_Sd_Configs>? puppetdb_sd_configs { get; set; }
+            public List<Hetzner_Sd_Configs>? hetzner_sd_configs { get; set; }
+            public List<Eureka_Sd_Configs>? eureka_sd_configs { get; set; }
+            public List<Scaleway_Sd_Configs>? scaleway_sd_configs { get; set; }
+            public List<Linode_Sd_Configs>? linode_sd_configs { get; set; }
+            public List<Uyuni_Sd_Configs>? uyuni_sd_configs { get; set; }
         }
 
         public class Tls_Config

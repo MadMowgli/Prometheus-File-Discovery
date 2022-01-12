@@ -4,13 +4,21 @@
     {
 
         // Fields
-        private string _job_name;
-        private string _scrape_interval;
-        private string _scrape_timeout;
-        private string _metrics_path;
-        private string _scheme;
-        private List<string> _targets;
-        private Dictionary<string, string> _labels;
+        private string? _job_name;
+        private string? _scrape_interval;
+        private string? _scrape_timeout;
+        private string? _metrics_path;
+        private string? _scheme;
+        private bool _honor_labels = false;
+        private List<string>? _targets;
+        private Dictionary<string, string>? _labels;
+        private Dictionary<string, List<String>>? _file_sd_configs;
+
+        // Constructor with no arguments
+        public PrometheusJob()
+        {
+
+        }
 
         // Constructor taking all parameters
         public PrometheusJob(string job_name, string scrape_interval, string scrape_timeout,
@@ -59,8 +67,10 @@
         public string Scrape_Timeout { get { return _scrape_timeout;} set { _scrape_timeout = value; } }
         public string Metrics_path { get { return _metrics_path; } set { _metrics_path = value; } }
         public string Scheme { get { return _scheme; } set { _scheme = value; } }
+        public bool Honor_Labels { get { return _honor_labels; } set { _honor_labels = value; } }
         public List<string> Targets { get { return _targets; } set { _targets = value; } }
         public Dictionary<string, string> Labels { get { return _labels;  } set { _labels = value; } }
+        public Dictionary<string, List<string>> File_Sd_Configs { get { return _file_sd_configs;  } set { _file_sd_configs = value;} }
 
         // Custom Methods
         public void addLabel(string key, string value)
@@ -79,6 +89,14 @@
         public void removeTarget(string target)
         {
             this.Targets.Remove(target);
+        }
+
+        public void addFileSdConfig(string key, string value)
+        {
+            // TODO: Adapt this data type
+            List<string> configs = new List<string>();
+            configs.Add(value);
+            this._file_sd_configs.Add(key, configs);
         }
 
     }
