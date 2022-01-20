@@ -72,7 +72,7 @@
         public List<string> Targets { get { return _targets; } set { _targets = value; } }
         public Dictionary<string, string> Labels { get { return _labels;  } set { _labels = value; } }
         public Dictionary<string, List<string>> File_Sd_Configs { get { return _file_sd_configs;  } set { _file_sd_configs = value;} }
-        public List<ConfigurationComponents.Static_Configs> Static_Configs { get; set; }
+        public List<ConfigurationComponents.Static_Configs> Static_Configs { get { return _static_configs;  } set { _static_configs = value; } }
 
         // Custom Methods
         public void addLabel(string key, string value)

@@ -121,7 +121,9 @@ namespace Prometheus_File_Discovery.Pages.Prometheus_File_Based_Discovery.Model
                                                 }
                                             }
                                         }
+                                        Console.WriteLine("Debug Line 124");
                                         prometheusJob.Static_Configs.Add(static_Configs);
+                                        Console.WriteLine("Debug Line 126");
                                     }
                                     
                                 }
