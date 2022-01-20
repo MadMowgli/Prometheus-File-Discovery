@@ -13,7 +13,7 @@
         private List<string>? _targets;
         private Dictionary<string, string>? _labels;
         private Dictionary<string, List<String>>? _file_sd_configs;
-        private Dictionary<string, List<String>>? _static_configs;
+        private List<ConfigurationComponents.Static_Configs> _static_configs = new List<ConfigurationComponents.Static_Configs>();
 
         // Constructor with no arguments
         public PrometheusJob()
@@ -72,7 +72,7 @@
         public List<string> Targets { get { return _targets; } set { _targets = value; } }
         public Dictionary<string, string> Labels { get { return _labels;  } set { _labels = value; } }
         public Dictionary<string, List<string>> File_Sd_Configs { get { return _file_sd_configs;  } set { _file_sd_configs = value;} }
-        public Dictionary<string, List<string>> Static_Configs { get; set; }
+        public List<ConfigurationComponents.Static_Configs> Static_Configs { get; set; }
 
         // Custom Methods
         public void addLabel(string key, string value)
@@ -101,6 +101,21 @@
             List<string> configs = new List<string>();
             configs.Add(value);
             this._file_sd_configs.Add(key, configs);
+        }
+
+        public ConfigurationComponents.Scrape_Configs toScrapeConfig()
+        {
+            ConfigurationComponents.Scrape_Configs scrape_Configs = new ConfigurationComponents.Scrape_Configs();
+
+            if(this._job_name != null) { scrape_Configs.job_name = this._job_name; }
+            if(this._scrape_interval != null) { scrape_Configs.scrape_interval = this._scrape_interval; }
+            if(this._scrape_timeout != null) { scrape_Configs.scrape_timeout = this._scrape_timeout; }
+            if(this._metrics_path != null) { scrape_Configs.metrics_path = this._metrics_path; }
+            if(this._scheme != null) { scrape_Configs.job_name = this._scheme; }
+
+            if(this._static_configs != null) { scrape_Configs.static_configs = this._static_configs; }
+
+            return scrape_Configs;
         }
 
     }

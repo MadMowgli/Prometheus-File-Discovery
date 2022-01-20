@@ -1,4 +1,6 @@
-﻿namespace Prometheus_File_Discovery.Pages.Prometheus_File_Based_Discovery.Model
+﻿using Newtonsoft.Json;
+
+namespace Prometheus_File_Discovery.Pages.Prometheus_File_Based_Discovery.Model
 {
     public class PrometheusConfiguration
     {
@@ -12,25 +14,11 @@
         public ConfigurationComponents.Scrape_Configs scrape_configs { get; set; }
         public ConfigurationComponents.Alerting alerting { get; set; }
 
-
-        // Constructor
-        //public PrometheusConfiguration(double Version)
-        //{
-        //    this.Version = Version;
-        //}
-
-
-        // Methods
-        //public void loadConfiguration(PrometheusConfiguration prometheusConfiguration)
-        //{
-        //    this.Version = prometheusConfiguration.Version;
-        //    this.global = prometheusConfiguration.global;
-        //    this.rule_files = prometheusConfiguration.rule_files;
-        //    this.remote_write = prometheusConfiguration.remote_write;
-        //    this.remote_read = prometheusConfiguration.remote_read;
-        //    this.scrape_configs = prometheusConfiguration.scrape_configs;
-        //    this.alerting = prometheusConfiguration.alerting;
-        //}
+        // ToString method
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
 
     }
 }

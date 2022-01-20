@@ -306,6 +306,9 @@
         // Convert to .Net object
         prometheusConfiguration = JsonToPrometheusConverter.convertJsonToDotNet(this.dynamicConfig, this.prometheusConfiguration);
 
+        // Debug
+        Console.WriteLine(prometheusConfiguration.ToString());
+
     }
 
 

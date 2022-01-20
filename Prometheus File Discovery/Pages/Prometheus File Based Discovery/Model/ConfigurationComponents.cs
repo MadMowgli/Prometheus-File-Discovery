@@ -196,7 +196,7 @@
 
         public class Scrape_Configs
         {
-            public string job_name { get; set; }
+            public string? job_name { get; set; }
             public bool? honor_labels { get; set; }
             public bool? honor_timestamps { get; set; }
             public Authorization? authorization { get; set; }

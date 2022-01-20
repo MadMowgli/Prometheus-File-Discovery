@@ -79,6 +79,7 @@ namespace Prometheus_File_Discovery.Pages.Prometheus_File_Based_Discovery.Model
                                 {
                                     // Each property is a new PrometheusJob
                                     PrometheusJob prometheusJob = new PrometheusJob();
+                                    ConfigurationComponents.Static_Configs static_Configs = new ConfigurationComponents.Static_Configs();
 
                                     string propName = val.Name;
                                     string propValue = val.Value.ToString();
@@ -88,6 +89,7 @@ namespace Prometheus_File_Discovery.Pages.Prometheus_File_Based_Discovery.Model
                                     if (propName.Equals("honor_labels")) { prometheusJob.Honor_Labels = Convert.ToBoolean(propValue); Console.WriteLine("Honor Labels: " + propValue); }
                                     if (propName.Equals("static_configs"))
                                     {
+                                        
                                         foreach (JObject jObj in val.Value)
                                         {
                                             // Loop over each property
@@ -100,6 +102,7 @@ namespace Prometheus_File_Discovery.Pages.Prometheus_File_Based_Discovery.Model
                                                     foreach(JValue jVal in jProp.Values())
                                                     {
                                                         prometheusJob.addTarget(jVal.ToString());
+                                                        static_Configs.targets.Add(jVal.ToString());
                                                         Console.WriteLine(jVal.ToString());
                                                     }
                                                 }
@@ -112,12 +115,15 @@ namespace Prometheus_File_Discovery.Pages.Prometheus_File_Based_Discovery.Model
                                                         string key = jVal.Name.ToString();
                                                         string value = jVal.Value.ToString();
                                                         Console.WriteLine(key + ":" + value);
+                                                        static_Configs.labels.Add(new ConfigurationComponents.Label(key, value));
                                                         prometheusJob.addLabel(key, value);
                                                     }
                                                 }
                                             }
                                         }
+                                        prometheusJob.Static_Configs.Add(static_Configs);
                                     }
+                                    
                                 }
                             }
                         }
