@@ -11,7 +11,7 @@
         private string? _scheme;
         private bool _honor_labels = false;
         private List<string>? _targets;
-        private Dictionary<string, string>? _labels;
+        private List<ConfigurationComponents.Label> _labels;
         private Dictionary<string, List<String>>? _file_sd_configs;
         private List<ConfigurationComponents.Static_Configs> _static_configs = new List<ConfigurationComponents.Static_Configs>();
 
@@ -23,7 +23,7 @@
 
         // Constructor taking all parameters
         public PrometheusJob(string job_name, string scrape_interval, string scrape_timeout,
-            string metrics_path, string scheme, List<string> targets, Dictionary<string, string> labels)
+            string metrics_path, string scheme, List<string> targets, List<ConfigurationComponents.Label> labels)
         {
             _job_name = job_name;
             _scrape_interval = scrape_interval;
@@ -36,7 +36,7 @@
 
         // Constructor taking all parameters except metrics_path and scheme, setting them to default
         public PrometheusJob(string job_name, string scrape_interval, string scrape_timeout,
-            List<string> targets, Dictionary<string, string> labels)
+            List<string> targets, List<ConfigurationComponents.Label> labels)
         {
             _job_name = job_name;
             _scrape_interval = scrape_interval;
@@ -70,19 +70,19 @@
         public string Scheme { get { return _scheme; } set { _scheme = value; } }
         public bool Honor_Labels { get { return _honor_labels; } set { _honor_labels = value; } }
         public List<string> Targets { get { return _targets; } set { _targets = value; } }
-        public Dictionary<string, string> Labels { get { return _labels;  } set { _labels = value; } }
+        public List<ConfigurationComponents.Label> Labels { get { return _labels;  } set { _labels = value; } }
         public Dictionary<string, List<string>> File_Sd_Configs { get { return _file_sd_configs;  } set { _file_sd_configs = value;} }
         public List<ConfigurationComponents.Static_Configs> Static_Configs { get { return _static_configs;  } set { _static_configs = value; } }
 
         // Custom Methods
         public void addLabel(string key, string value)
         {
-            if(this.Labels == null) { this.Labels = new Dictionary<string, string>(); }
-            this.Labels.Add(key, value);
+            if(this.Labels == null) { this.Labels = new List<ConfigurationComponents.Label>(); }
+            this.Labels.Add(new ConfigurationComponents.Label(key, value));
         }
         public void removeLabel(string key)
         {
-            this.Labels.Remove(key);
+            // this.Labels.Remove(key);
         }
 
         public void addTarget(string target)
@@ -110,7 +110,7 @@
             if(this._job_name != null) { scrape_Configs.job_name = this._job_name; }
             if(this._scrape_interval != null) { scrape_Configs.scrape_interval = this._scrape_interval; }
             if(this._scrape_timeout != null) { scrape_Configs.scrape_timeout = this._scrape_timeout; }
-            if(this._metrics_path != null) { scrape_Configs.metrics_path = this._metrics_path; }
+            if(this._metrics_path != null && _metrics_path != "") { scrape_Configs.metrics_path = this._metrics_path; }
             if(this._scheme != null) { scrape_Configs.job_name = this._scheme; }
 
             if(this._static_configs != null) { scrape_Configs.static_configs = this._static_configs; }

@@ -185,7 +185,7 @@
     private string? add_targets { get; set; }
     private string? add_labels { get; set; }
     private List<String> add_targetList { get; set; } = new List<string>();
-    private Dictionary<string, string> add_labelDict { get; set; } = new Dictionary<string, string>();
+    private List<ConfigurationComponents.Label> add_labelList { get; set; } = new List<ConfigurationComponents.Label>();
 
     private string? update_jobName { get; set; }
     private string? update_scrapeInterval { get; set; }
@@ -230,12 +230,15 @@
         string[] splitLabels = this.add_labels.Split(":");
         for (int index = 0; index < splitLabels.Length; index += 2)
         {
-            this.add_labelDict.Add(splitLabels[index], splitLabels[index + 1]);
+            String key = splitLabels[index];
+            String value = splitLabels[index + 1];
+            ConfigurationComponents.Label label = new ConfigurationComponents.Label(key, value);
+            this.add_labelList.Add(label);
         }
 
         // Create new ProemtheusJob
         PrometheusJob prometheusJob = new PrometheusJob(add_jobName, add_scrapeInterval, add_scrapeTimeout,
-                                                        add_metricsPath, add_scheme, add_targetList, add_labelDict);
+                                                        add_metricsPath, add_scheme, add_targetList, add_labelList);
 
 
         // Debug
@@ -245,7 +248,7 @@
         Console.WriteLine(this.add_metricsPath);
         Console.WriteLine(this.add_scheme);
         Console.WriteLine(this.add_targetList.ElementAt(0));
-        Console.WriteLine(this.add_labelDict[splitLabels[0]]);
+        Console.WriteLine(this.add_labelList);
 
         // JobObj Debug
         Console.WriteLine(prometheusJob.JobName);
@@ -358,6 +361,6 @@
 
     }
 
-    
+
 
 }

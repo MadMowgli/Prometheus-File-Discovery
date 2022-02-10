@@ -66,7 +66,7 @@ namespace Prometheus_File_Discovery.Pages.Prometheus_File_Based_Discovery.Model
 
                     case "scrape_configs":
                         // Create new configComponent
-                        ConfigurationComponents.Scrape_Configs scrape_configs = new ConfigurationComponents.Scrape_Configs();
+                        // ConfigurationComponents.Scrape_Configs scrape_configs = new ConfigurationComponents.Scrape_Configs();
                         Console.WriteLine("Parsing scrape_configs component...");
 
                         // Loop over object properties
@@ -75,12 +75,13 @@ namespace Prometheus_File_Discovery.Pages.Prometheus_File_Based_Discovery.Model
                             // Check if property has properties itself
                             if (arr.Values().Any())
                             {
+                                
+                                // Each property is a new PrometheusJob
+                                PrometheusJob prometheusJob = new PrometheusJob();
+                                ConfigurationComponents.Static_Configs static_Configs = new ConfigurationComponents.Static_Configs();
+                                
                                 foreach (JProperty val in arr.Values())
                                 {
-                                    // Each property is a new PrometheusJob
-                                    PrometheusJob prometheusJob = new PrometheusJob();
-                                    ConfigurationComponents.Static_Configs static_Configs = new ConfigurationComponents.Static_Configs();
-
                                     string propName = val.Name;
                                     string propValue = val.Value.ToString();
                                     if (propName.Equals("job_name")) { prometheusJob.JobName = propValue; Console.WriteLine("Job Name: " + propValue); }
@@ -115,23 +116,25 @@ namespace Prometheus_File_Discovery.Pages.Prometheus_File_Based_Discovery.Model
                                                         string key = jVal.Name.ToString();
                                                         string value = jVal.Value.ToString();
                                                         Console.WriteLine(key + ":" + value);
-                                                        static_Configs.labels.Add(new ConfigurationComponents.Label(key, value));
+                                                        static_Configs.labels.Add(key, value);
                                                         prometheusJob.addLabel(key, value);
                                                     }
                                                 }
                                             }
                                         }
-                                        Console.WriteLine("Debug Line 124");
                                         prometheusJob.Static_Configs.Add(static_Configs);
-                                        Console.WriteLine("Debug Line 126");
                                     }
-                                    
+                                    // Assign new configComponent
+                                    Console.WriteLine("Debug Line 127");
+                                    ConfigurationComponents.Scrape_Configs
+                                        scrapeConfig = prometheusJob.toScrapeConfig();
+                                    prometheusConfiguration.scrape_configs.Add(scrapeConfig); // This produces nullpointerexception
+                                    Console.WriteLine("Debug Line 129");
                                 }
                             }
                         }
 
-                        // Assign new configComponent
-                        prometheusConfiguration.scrape_configs = scrape_configs;
+                        
                         break;
 
 
@@ -220,7 +223,7 @@ namespace Prometheus_File_Discovery.Pages.Prometheus_File_Based_Discovery.Model
                                                                         string key = jVal.Name.ToString();
                                                                         string value = jVal.Value.ToString();
                                                                         Console.WriteLine(key + ":" + value);
-                                                                        static_Configs.labels.Add(new ConfigurationComponents.Label(key, value));
+                                                                        static_Configs.labels.Add(key, value);
                                                                     }
                                                                 }
                                                             }

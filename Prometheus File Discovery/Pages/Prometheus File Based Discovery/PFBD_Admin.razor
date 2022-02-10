@@ -167,7 +167,7 @@
     private string? add_targets { get; set; }
     private string? add_labels { get; set; }
     private List<String> add_targetList { get; set; } = new List<string>();
-    private Dictionary<string, string> add_labelDict { get; set; } = new Dictionary<string, string>();
+    Dictionary<string, string> add_labelDict { get; set; } = new Dictionary<string, string>();
 
     private string? update_jobName { get; set; }
     private string? update_scrapeInterval { get; set; }
@@ -210,8 +210,10 @@
         }
 
         // Create new ProemtheusJob
+        // TODO: DELETE THIS - ONLY WORKAROUND
+        List<ConfigurationComponents.Label> tmpLabelList = new List<ConfigurationComponents.Label>();
         PrometheusJob prometheusJob = new PrometheusJob(add_jobName, add_scrapeInterval, add_scrapeTimeout,
-                                                        add_metricsPath, add_scheme, add_targetList, add_labelDict);
+                                                        add_metricsPath, add_scheme, add_targetList, tmpLabelList);
 
 
         // Debug
