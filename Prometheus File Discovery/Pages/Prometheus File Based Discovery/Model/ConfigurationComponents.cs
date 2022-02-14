@@ -1,4 +1,6 @@
-﻿namespace Prometheus_File_Discovery.Pages.Prometheus_File_Based_Discovery.Model;
+﻿using Newtonsoft.Json;
+
+namespace Prometheus_File_Discovery.Pages.Prometheus_File_Based_Discovery.Model;
 /*
  * This class serves as a wrapper for all the small classes used as configuration components.
  * Thereby, the wrapper class should not be instantiated, which is why it is set as static.
@@ -17,6 +19,7 @@ public static class ConfigurationComponents
         public List<Alertmanager> alertmanagers { get; set; }
     }
 
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class Alertmanager
     {
         // Fields
@@ -27,6 +30,7 @@ public static class ConfigurationComponents
         public List<Static_Configs> static_configs { get; set; } = new();
     }
 
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class Authorization
     {
         // Constructors
@@ -45,6 +49,7 @@ public static class ConfigurationComponents
         public string credentials { get; set; }
     }
 
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class Basic_Auth
     {
         // Constructors
@@ -66,18 +71,21 @@ public static class ConfigurationComponents
         public string password_file { get; set; }
     }
 
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class Dns_Sd_Configs
     {
         public string refresh_interval { get; set; }
         public List<string> names { get; set; }
     }
 
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class Filter
     {
         public string name { get; set; }
         public List<string> values { get; set; }
     }
 
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class File_Sd_Configs
     {
         public File_Sd_Configs(List<string> files, string refresh_interval)
@@ -90,6 +98,7 @@ public static class ConfigurationComponents
         public string refresh_interval { get; set; }
     }
 
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class Global
     {
         // Properties
@@ -100,16 +109,19 @@ public static class ConfigurationComponents
         // public List<string>? external_labels { get; set; }
     }
 
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class Headers
     {
         public string name { get; set; }
     }
 
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class Http_Sd_Configs
     {
         public string url { get; set; }
     }
 
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class Label
     {
         // Constructor
@@ -124,6 +136,7 @@ public static class ConfigurationComponents
         public string value { get; set; }
     }
 
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class Metric_Relabel_Configs
     {
         public List<string> source_labels { get; set; }
@@ -131,16 +144,19 @@ public static class ConfigurationComponents
         public string action { get; set; }
     }
 
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class Node_Meta
     {
         public string rack { get; set; }
     }
 
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class Namespaces
     {
         public List<string> names { get; set; }
     }
 
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class Oauth2
     {
         public string client_id { get; set; }
@@ -149,6 +165,7 @@ public static class ConfigurationComponents
         public Tls_Config tls_config { get; set; }
     }
 
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class Remote_Read
     {
         public string url { get; set; }
@@ -158,6 +175,7 @@ public static class ConfigurationComponents
         public Tls_Config tls_config { get; set; }
     }
 
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class Remote_Write
     {
         public string url { get; set; }
@@ -168,11 +186,13 @@ public static class ConfigurationComponents
         public Headers headers { get; set; }
     }
 
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class Required_Matchers
     {
         public string job { get; set; }
     }
 
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class Relabel_Configs
     {
         public List<string> source_labels { get; set; }
@@ -184,6 +204,7 @@ public static class ConfigurationComponents
         public string separator { get; set; }
     }
 
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class Static_Configs
     {
         public List<string> targets { get; set; } = new();
@@ -201,7 +222,8 @@ public static class ConfigurationComponents
         // Properties
         public IDictionary<string, string> props { get; set; }
     }
-
+    
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class Scrape_Configs_Custom
     {
         // Constructor
@@ -220,22 +242,22 @@ public static class ConfigurationComponents
         }
     }
 
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class Scrape_Configs
     {
+        
         // Constructor
         public Scrape_Configs()
         {
             job_name = "";
-            honor_labels = false;       // default value: false
-            honor_timestamps = true;    // default value: true
+            honor_labels = false;                               // default value: false
+            honor_timestamps = true;                            // default value: true
             scrape_interval = "15s";
             scrape_timeout = "5s";
-            scheme = "http";            // default value: http
-            file_sd_configs = new List<File_Sd_Configs>();
+            scheme = "http";                                    // default value: http
+            // file_sd_configs = new List<File_Sd_Configs>();
             static_configs = new List<Static_Configs>();
-
-            // Important: This is set to an empty string, adjust for it when using metrics_path
-            metrics_path = "/metrics";
+            metrics_path = "/metrics";                          // default value: /metrics
         }
 
         // Fields
@@ -282,6 +304,7 @@ public static class ConfigurationComponents
         // public List<Uyuni_Sd_Configs>? uyuni_sd_configs { get; set; }
     }
 
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class Tls_Config
     {
         public string ca_file { get; set; }
@@ -290,6 +313,7 @@ public static class ConfigurationComponents
         public bool insecure_skip_verify { get; set; }
     }
 
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class Write_Relabel_Configs
     {
         public List<string> source_labels { get; set; }

@@ -14,11 +14,6 @@ public static class JsonToPrometheusConverter
     public static PrometheusConfiguration convertJsonToDotNet(dynamic dynamicConfig,
         PrometheusConfiguration prometheusConfiguration)
     {
-        // dynamicConfig is a JObject
-        // dynamicConfig has JProperties
-        // Jproperties have child values
-        // These Child values are JObjects themselves
-
         /* NAMING CONVENTION
          * - configProperty = elements of the prometheus configuration (global, rule_files, scrape_configs, ...)
          */
