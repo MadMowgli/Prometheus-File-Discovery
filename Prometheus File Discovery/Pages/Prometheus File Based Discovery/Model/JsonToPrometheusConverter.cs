@@ -114,52 +114,57 @@ public static class JsonToPrometheusConverter
 
                                     if (propName.Equals("static_configs"))
                                     {
-                                        // Each static config element is a list of JProperties, so we need to iterate
                                         Console.WriteLine("Reading static_configs...");
-
-                                        foreach (JObject staticConfigJObject in jobProperty.Values())
+                                        // The static_configs element contains an array of static_configs
+                                        foreach (JArray staticConfigArray in jobProperty.Children())
                                         {
-                                            var static_Configs = new ConfigurationComponents.Static_Configs();
-                                            Console.WriteLine("staticConfigObject: " + staticConfigJObject);
-
-                                            // Loop over each property
-                                            foreach (var staticConfigProperty in staticConfigJObject.Properties())
+                                            
+                                            // Each element inside this array is a static_configs object
+                                            foreach (JObject staticConfigJObject in staticConfigArray.Children())
                                             {
-                                                var staticConfigPropertyName = staticConfigProperty.Name;
+                                                var static_Configs = new ConfigurationComponents.Static_Configs();
+                                                Console.WriteLine("staticConfigObject: " + staticConfigArray);
 
-                                                // Target list
-                                                if (staticConfigPropertyName == "targets")
+                                                //Loop over each property
+                                                foreach (var staticConfigProperty in staticConfigJObject.Properties())
                                                 {
-                                                    Console.Write("Targets: ");
-                                                    foreach (JValue jVal in staticConfigProperty.Values())
+                                                    var staticConfigPropertyName = staticConfigProperty.Name;
+
+                                                    // Target list
+                                                    if (staticConfigPropertyName == "targets")
                                                     {
-                                                        static_Configs.targets.Add(jVal.ToString());
-                                                        Console.WriteLine(jVal.ToString());
+                                                        Console.Write("Targets: ");
+                                                        foreach (JValue scrapeTarget in staticConfigProperty.Values())
+                                                        {
+                                                            static_Configs.targets.Add(scrapeTarget.ToString());
+                                                            Console.WriteLine(scrapeTarget.ToString());
+                                                        }
+                                                    }
+
+                                                    // Labels
+                                                    if (staticConfigPropertyName == "labels")
+                                                    {
+                                                        Console.Write("Labels: ");
+                                                        foreach (dynamic customLabel in staticConfigProperty.Values())
+                                                        {
+                                                            string key = customLabel.Name.ToString();
+                                                            string value = customLabel.Value.ToString();
+                                                            Console.WriteLine(key + ":" + value);
+                                                            static_Configs.labels.Add(key, value);
+                                                        }
                                                     }
                                                 }
-
-                                                // Labels
-                                                if (staticConfigPropertyName == "labels")
-                                                {
-                                                    Console.Write("Labels: ");
-                                                    foreach (dynamic jVal in staticConfigProperty.Values())
-                                                    {
-                                                        string key = jVal.Name.ToString();
-                                                        string value = jVal.Value.ToString();
-                                                        Console.WriteLine(key + ":" + value);
-                                                        static_Configs.labels.Add(key, value);
-                                                    }
-                                                }
-
                                                 prometheusJob.Static_Configs.Add(static_Configs);
                                             }
                                         }
                                     }
                                 }
+
                                 // Assign new configComponent
                                 ConfigurationComponents.Scrape_Configs
                                     scrapeConfig = prometheusJob.toScrapeConfigObject();
-                                prometheusConfiguration.scrape_configs.Add(scrapeConfig); // This produces nullpointerexception
+                                prometheusConfiguration.scrape_configs
+                                    .Add(scrapeConfig); // This produced a nullPointerException once
                             }
                         }
                     }

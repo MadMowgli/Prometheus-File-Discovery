@@ -226,11 +226,11 @@ public static class ConfigurationComponents
         public Scrape_Configs()
         {
             job_name = "";
-            honor_labels = true;
-            honor_timestamps = true;
+            honor_labels = false;       // default value: false
+            honor_timestamps = true;    // default value: true
             scrape_interval = "15s";
             scrape_timeout = "5s";
-            scheme = "https";
+            scheme = "http";            // default value: http
             file_sd_configs = new List<File_Sd_Configs>();
             static_configs = new List<Static_Configs>();
 
