@@ -119,7 +119,6 @@ public static class JsonToPrometheusConverter
                                         // The static_configs element contains an array of static_configs
                                         foreach (JArray staticConfigArray in jobProperty.Children())
                                         {
-                                            
                                             // Each element inside this array is a static_configs object
                                             foreach (JObject staticConfigJObject in staticConfigArray.Children())
                                             {
@@ -155,6 +154,7 @@ public static class JsonToPrometheusConverter
                                                         }
                                                     }
                                                 }
+
                                                 prometheusJob.Static_Configs.Add(static_Configs);
                                             }
                                         }
@@ -181,82 +181,85 @@ public static class JsonToPrometheusConverter
 
                     // Check if not empty
                     if (configProperty.HasValues)
-                        foreach (var val in configProperty.Values<dynamic>())
-                            // Goes into the 'alertmanagers' object
-                        foreach (var val2 in val.Values<dynamic>())
+                    {
+                        foreach (JObject alertManagersObject in configProperty.Values<object>())
                         {
-                            var alertManager = new ConfigurationComponents.Alertmanager();
-                            Console.WriteLine("Alerting property name: " + val2.Name);
-                            var objType = val2.GetType();
-
-                            // TODO: Multiple alertmanager-objects can be passed.
-                            if (val2.GetType() == typeof(JArray)) Console.WriteLine("Alerting value type: JArray");
-
-                            // Single alertmanager-object
-                            if (val2.GetType() == typeof(JProperty))
+                            foreach (JProperty alertManagerObject in alertManagersObject.Properties())
                             {
-                                Console.WriteLine("Alerting value type: JProperty");
 
-                                // Get values of alertmanagers object
-                                foreach (var val3 in val2.Values<dynamic>())
-                                    // val3 is JArray
-                                    // Console.WriteLine(val3.GetType());
-                                    // Console.WriteLine(val3.ToString());
-
-                                foreach (var arrVal in val3.Values<dynamic>())
-                                    //JArray contains Jobjects
-                                foreach (var arrObj in arrVal.Values<dynamic>())
+                                // Each obect inside the array is a new alertManager
+                                foreach (JObject alertManager in alertManagerObject.Values())
                                 {
-                                    string arrObjName = arrObj.Name;
-
-                                    // Scheme object
-                                    if (arrObjName == "scheme")
+                                    ConfigurationComponents.Alertmanager prometheusAlertManager =
+                                        new ConfigurationComponents
+                                            .Alertmanager();
+                                    
+                                    foreach (JProperty alertManagerProperty in alertManager.Properties())
                                     {
-                                        Console.WriteLine("Alertmanager scheme: " + arrObj.Value.ToString());
-                                        alertManager.scheme = arrObj.Value.ToString();
-                                    }
+                                        var propName = alertManagerProperty.Name;
+                                        var propValue = alertManagerProperty.Value.ToString();
 
-                                    // Static_configs object
-                                    var static_Configs = new ConfigurationComponents.Static_Configs();
-                                    if (arrObjName == "static_configs")
-                                    {
-                                        Console.WriteLine(arrObjName);
-                                        foreach (JObject jObj in arrObj.Value)
-                                            // Console.WriteLine("JValue Type: " + jObj.GetType());
-                                            // Loop over each property
-                                        foreach (dynamic jProp in jObj.Properties())
+                                        if (propName.Equals("scheme"))
                                         {
-                                            string propName2 = jProp.Name;
-                                            Console.WriteLine(propName2);
-                                            if (propName2 == "targets")
-                                            {
-                                                Console.WriteLine("Targets:");
-                                                foreach (JArray jVal in jProp.Values<dynamic>())
-                                                foreach (var jArrVal in jVal.Value<dynamic>())
-                                                {
-                                                    Console.WriteLine(jArrVal.ToString());
-                                                    static_Configs.targets.Add(jArrVal.ToString());
-                                                }
-                                            }
+                                            prometheusAlertManager.scheme = propValue;
+                                            Console.WriteLine("Alertmanager scheme: " + propValue);
+                                        }
 
-                                            if (propName2 == "labels")
+                                        if (propName.Equals("static_configs"))
+                                        {
+                                            Console.WriteLine("Reading static_configs for alertManager...");
+                                            // The static_configs element contains an array of static_configs
+                                            foreach (JArray staticConfigArray in alertManagerProperty.Children())
                                             {
-                                                Console.WriteLine("Labels:");
-                                                foreach (var jVal in jProp.Values())
+                                                // Each element inside this array is a static_configs object
+                                                foreach (JObject staticConfigJObject in staticConfigArray.Children())
                                                 {
-                                                    string key = jVal.Name.ToString();
-                                                    string value = jVal.Value.ToString();
-                                                    Console.WriteLine(key + ":" + value);
-                                                    static_Configs.labels.Add(key, value);
+                                                    var static_Configs = new ConfigurationComponents.Static_Configs();
+                                                    Console.WriteLine("staticConfigObject: " + staticConfigArray);
+
+                                                    //Loop over each property
+                                                    foreach (var staticConfigProperty in
+                                                             staticConfigJObject.Properties())
+                                                    {
+                                                        var staticConfigPropertyName = staticConfigProperty.Name;
+
+                                                        // Target list
+                                                        if (staticConfigPropertyName == "targets")
+                                                        {
+                                                            Console.Write("Targets: ");
+                                                            foreach (JValue scrapeTarget in
+                                                                     staticConfigProperty.Values())
+                                                            {
+                                                                static_Configs.targets.Add(scrapeTarget.ToString());
+                                                                Console.WriteLine(scrapeTarget.ToString());
+                                                            }
+                                                        }
+
+                                                        // Labels
+                                                        if (staticConfigPropertyName == "labels")
+                                                        {
+                                                            Console.Write("Labels: ");
+                                                            foreach (dynamic customLabel in
+                                                                     staticConfigProperty.Values())
+                                                            {
+                                                                string key = customLabel.Name.ToString();
+                                                                string value = customLabel.Value.ToString();
+                                                                Console.WriteLine(key + ":" + value);
+                                                                static_Configs.labels.Add(key, value);
+                                                            }
+                                                        }
+                                                    }
+
+                                                    prometheusAlertManager.static_configs.Add(static_Configs);
                                                 }
                                             }
                                         }
                                     }
-
-                                    alertManager.static_configs.Add(static_Configs);
+                                    alerting.alertmanagers.Add(prometheusAlertManager);
                                 }
                             }
                         }
+                    }
 
                     // Assign new configComponent
                     prometheusConfiguration.alerting = alerting;

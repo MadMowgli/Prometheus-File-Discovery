@@ -16,7 +16,7 @@ public static class ConfigurationComponents
     public class Alerting
     {
         // Properties
-        public List<Alertmanager> alertmanagers { get; set; }
+        public List<Alertmanager> alertmanagers { get; set; } = new List<Alertmanager>();
     }
 
     [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
