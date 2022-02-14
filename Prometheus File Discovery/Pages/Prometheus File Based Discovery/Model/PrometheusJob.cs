@@ -84,7 +84,7 @@ public class PrometheusJob
         if (Scrape_Interval != null) scrapeConfigObject.scrape_interval = Scrape_Interval;
         if (Scrape_Timeout != null) scrapeConfigObject.scrape_timeout = Scrape_Timeout;
         if (Metrics_path != null && Metrics_path != "") scrapeConfigObject.metrics_path = Metrics_path;
-        if (Scheme != null) scrapeConfigObject.job_name = Scheme;
+        if (Scheme != null) scrapeConfigObject.scheme = Scheme;
         if (Static_Configs != null) scrapeConfigObject.static_configs = Static_Configs;
 
         return scrapeConfigObject;

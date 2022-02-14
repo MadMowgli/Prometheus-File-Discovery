@@ -112,6 +112,12 @@ public static class JsonToPrometheusConverter
                                         Console.WriteLine("Honor Labels: " + propValue);
                                     }
 
+                                    if (propName.Equals("scheme"))
+                                    {
+                                        prometheusJob.Scheme = propValue;
+                                        Console.WriteLine("Scheme: " + propValue);
+                                    }
+
                                     if (propName.Equals("static_configs"))
                                     {
                                         Console.WriteLine("Reading static_configs...");
