@@ -1,5 +1,7 @@
 {
-  "global": { "scrape_interval": "15s" },
+  "global": {
+    "scrape_interval": "15s"
+  },
   "scrape_configs": [
     {
       "job_name": "job_name_1",
@@ -7,7 +9,9 @@
       "scrape_timeout": "4s",
       "static_configs": [
         {
-          "targets": [ "localhost:9090" ],
+          "targets": [
+            "localhost:9090"
+          ],
           "labels": {
             "label_1": "value_1",
             "label_2": "value_2",
@@ -15,7 +19,9 @@
           }
         },
         {
-          "targets": [ "localhost:9091" ],
+          "targets": [
+            "localhost:9091"
+          ],
           "labels": {
             "label_4": "value_4",
             "label_5": "value_5",
@@ -30,7 +36,9 @@
       "scrape_timeout": "7s",
       "static_configs": [
         {
-          "targets": [ "localhost:9092" ],
+          "targets": [
+            "localhost:9092"
+          ],
           "labels": {
             "label_7": "value_7",
             "label_8": "value_8",
@@ -38,7 +46,9 @@
           }
         },
         {
-          "targets": [ "localhost:9093" ],
+          "targets": [
+            "localhost:9093"
+          ],
           "labels": {
             "label_10": "value_10",
             "label_11": "value_11",
@@ -52,9 +62,13 @@
     "alertmanagers": [
       {
         "scheme": "http",
-        "static_configs": [ "targets - 'localhost:9094'" ]
+        "static_configs": [
+          "targets - 'localhost:9094'"
+        ]
       }
     ]
   },
-  "rule_files": [ "prometheus_alerting_rules.yml" ]
+  "rule_files": [
+    "prometheus_alerting_rules.yml"
+  ]
 }

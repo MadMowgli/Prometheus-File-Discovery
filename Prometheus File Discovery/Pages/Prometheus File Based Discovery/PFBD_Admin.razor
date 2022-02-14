@@ -1,8 +1,8 @@
 ﻿<!-- Blazor Section -->
 @page "/PFBD_Admin."
-@inject HttpClient Http
+@using Prometheus_File_Discovery.Pages.Prometheus_File_Based_Discovery.Data.Example
 @using Prometheus_File_Discovery.Pages.Prometheus_File_Based_Discovery.Model
-@using Prometheus_File_Based_Discovery.Data.Example
+@inject HttpClient Http
 
 <!-- HTML Section -->
 <div class="container-fluid mt-3">
@@ -25,27 +25,27 @@
                 <div class="card-body">
                     <div class="input-group needs-validation input-group-sm mb-3">
                         <span class="input-group-text" id="basic-addon1">Job Name</span>
-                        <input type="text" class="form-control" @bind="@add_jobName" placeholder="Job Name" aria-label="Job Name" aria-describedby="basic-addon1" required />
+                        <input type="text" class="form-control" @bind="@add_jobName" placeholder="Job Name" aria-label="Job Name" aria-describedby="basic-addon1" required/>
                     </div>
                     <div class="input-group input-group-sm mb-3">
                         <span class="input-group-text" id="basic-addon1">Targets</span>
-                        <input type="text" class="form-control" @bind="@add_targets" placeholder="192.168.0.1:8000, 192.168.1.1:3000" aria-label="Scrape Interval" aria-describedby="basic-addon1" />
+                        <input type="text" class="form-control" @bind="@add_targets" placeholder="192.168.0.1:8000, 192.168.1.1:3000" aria-label="Scrape Interval" aria-describedby="basic-addon1"/>
                     </div>
                     <div class="input-group input-group-sm mb-3">
                         <span class="input-group-text" id="basic-addon1">Labels</span>
-                        <input type="text" class="form-control" @bind="@add_labels" placeholder="key:value, key2:value2" aria-label="Scrape Interval" aria-describedby="basic-addon1" />
+                        <input type="text" class="form-control" @bind="@add_labels" placeholder="key:value, key2:value2" aria-label="Scrape Interval" aria-describedby="basic-addon1"/>
                     </div>
                     <div class="input-group input-group-sm mb-3">
                         <span class="input-group-text" id="basic-addon1">Scrape Interval</span>
-                        <input type="text" class="form-control" @bind="@add_scrapeInterval" placeholder="10s" aria-label="Scrape Interval" aria-describedby="basic-addon1" />
+                        <input type="text" class="form-control" @bind="@add_scrapeInterval" placeholder="10s" aria-label="Scrape Interval" aria-describedby="basic-addon1"/>
                     </div>
                     <div class="input-group input-group-sm mb-3">
                         <span class="input-group-text" id="basic-addon1">Scrape Timeout</span>
-                        <input type="text" class="form-control" @bind="@add_scrapeTimeout" placeholder="5s" aria-label="Scrape Timeout" aria-describedby="basic-addon1" />
+                        <input type="text" class="form-control" @bind="@add_scrapeTimeout" placeholder="5s" aria-label="Scrape Timeout" aria-describedby="basic-addon1"/>
                     </div>
                     <div class="input-group input-group-sm mb-3">
                         <span class="input-group-text" id="basic-addon1">Metrics Path</span>
-                        <input type="text" class="form-control" @bind="@add_metricsPath" placeholder="/metrics" aria-label="Metrics Path" aria-describedby="basic-addon1" />
+                        <input type="text" class="form-control" @bind="@add_metricsPath" placeholder="/metrics" aria-label="Metrics Path" aria-describedby="basic-addon1"/>
                     </div>
                     <div class="input-group input-group-sm mb-3">
                         <label class="input-group-text" for="inputGroupSelect01">Scheme</label>
@@ -79,23 +79,23 @@
                     </div>
                     <div class="input-group input-group-sm mb-3">
                         <span class="input-group-text" id="basic-addon1">Targets</span>
-                        <input type="text" class="form-control" @bind="@update_targets" placeholder="192.168.0.1:8000, 192.168.1.1:3000" aria-label="Scrape Interval" aria-describedby="basic-addon1" />
+                        <input type="text" class="form-control" @bind="@update_targets" placeholder="192.168.0.1:8000, 192.168.1.1:3000" aria-label="Scrape Interval" aria-describedby="basic-addon1"/>
                     </div>
                     <div class="input-group input-group-sm mb-3">
                         <span class="input-group-text" id="basic-addon1">Labels</span>
-                        <input type="text" class="form-control" @bind="@update_labels" placeholder="key:value, key2:value2" aria-label="Scrape Interval" aria-describedby="basic-addon1" />
+                        <input type="text" class="form-control" @bind="@update_labels" placeholder="key:value, key2:value2" aria-label="Scrape Interval" aria-describedby="basic-addon1"/>
                     </div>
                     <div class="input-group input-group-sm mb-3">
                         <span class="input-group-text" id="basic-addon1">Scrape Interval</span>
-                        <input type="text" class="form-control" @bind="@update_scrapeInterval" placeholder="10s" aria-label="Scrape Interval" aria-describedby="basic-addon1" />
+                        <input type="text" class="form-control" @bind="@update_scrapeInterval" placeholder="10s" aria-label="Scrape Interval" aria-describedby="basic-addon1"/>
                     </div>
                     <div class="input-group input-group-sm mb-3">
                         <span class="input-group-text" id="basic-addon1">Scrape Timeout</span>
-                        <input type="text" class="form-control" @bind="@update_scrapeTimeout" placeholder="5s" aria-label="Scrape Timeout" aria-describedby="basic-addon1" />
+                        <input type="text" class="form-control" @bind="@update_scrapeTimeout" placeholder="5s" aria-label="Scrape Timeout" aria-describedby="basic-addon1"/>
                     </div>
                     <div class="input-group input-group-sm mb-3">
                         <span class="input-group-text" id="basic-addon1">Metrics Path</span>
-                        <input type="text" class="form-control" @bind="@update_metricsPath" placeholder="/metrics" aria-label="Metrics Path" aria-describedby="basic-addon1" />
+                        <input type="text" class="form-control" @bind="@update_metricsPath" placeholder="/metrics" aria-label="Metrics Path" aria-describedby="basic-addon1"/>
                     </div>
                     <div class="input-group input-group-sm mb-3">
                         <label class="input-group-text" for="inputGroupSelect01">Scheme</label>
@@ -157,6 +157,7 @@
 </div>
 
 <!-- Code Section-->
+
 @code {
     // Fields
     private string? add_jobName { get; set; }
@@ -166,8 +167,8 @@
     private string? add_scheme { get; set; }
     private string? add_targets { get; set; }
     private string? add_labels { get; set; }
-    private List<String> add_targetList { get; set; } = new List<string>();
-    Dictionary<string, string> add_labelDict { get; set; } = new Dictionary<string, string>();
+    private List<string> add_targetList { get; } = new();
+    Dictionary<string, string> add_labelDict { get; } = new();
 
     private string? update_jobName { get; set; }
     private string? update_scrapeInterval { get; set; }
@@ -176,8 +177,8 @@
     private string? update_scheme { get; set; }
     private string? update_targets { get; set; }
     private string? update_labels { get; set; }
-    private List<String> update_targetList { get; set; } = new List<string>();
-    private Dictionary<string, string> update_labelDict { get; set; } = new Dictionary<string, string>();
+    private List<string> update_targetList { get; } = new();
+    private Dictionary<string, string> update_labelDict { get; } = new();
 
     private string? delete_jobName { get; set; }
 
@@ -192,98 +193,137 @@
     // Methods
     public void addScrapingTarget()
     {
-        // Set defaults where necessary
-        if (this.add_jobName == null || this.add_jobName.Equals("")) { this.add_jobName = "JobDefault"; }
-        if (this.add_scrapeInterval == null || this.add_scrapeInterval.Equals("")) { this.add_scrapeInterval = "10s"; }
-        if (this.add_scrapeTimeout == null || this.add_scrapeTimeout.Equals("")) { this.add_scrapeTimeout = "5s"; }
-        if (this.add_metricsPath == null || this.add_metricsPath.Equals("")) { this.add_metricsPath = "/metrics"; }
-        if (this.add_scheme == null || this.add_scheme.Equals("")) { this.add_scheme = "https"; }
-        if (this.add_targets == null || this.add_targets.Equals("")) { this.add_targets = "192.168.0.1"; }
-        if (this.add_labels == null || this.add_labels.Equals("")) { this.add_labels = "label_1:value_1"; }
-
-        // Fill up collections
-        this.add_targetList.AddRange(this.add_targets.Split(","));
-        string[] splitLabels = this.add_labels.Split(":");
-        for (int index = 0; index < splitLabels.Length; index += 2)
+    // Set defaults where necessary
+        if (add_jobName == null || add_jobName.Equals(""))
         {
-            this.add_labelDict.Add(splitLabels[index], splitLabels[index + 1]);
+            add_jobName = "JobDefault";
+        }
+        if (add_scrapeInterval == null || add_scrapeInterval.Equals(""))
+        {
+            add_scrapeInterval = "10s";
+        }
+        if (add_scrapeTimeout == null || add_scrapeTimeout.Equals(""))
+        {
+            add_scrapeTimeout = "5s";
+        }
+        if (add_metricsPath == null || add_metricsPath.Equals(""))
+        {
+            add_metricsPath = "/metrics";
+        }
+        if (add_scheme == null || add_scheme.Equals(""))
+        {
+            add_scheme = "https";
+        }
+        if (add_targets == null || add_targets.Equals(""))
+        {
+            add_targets = "192.168.0.1";
+        }
+        if (add_labels == null || add_labels.Equals(""))
+        {
+            add_labels = "label_1:value_1";
         }
 
-        // Create new ProemtheusJob
-        // TODO: DELETE THIS - ONLY WORKAROUND
-        List<ConfigurationComponents.Label> tmpLabelList = new List<ConfigurationComponents.Label>();
-        PrometheusJob prometheusJob = new PrometheusJob(add_jobName, add_scrapeInterval, add_scrapeTimeout,
-                                                        add_metricsPath, add_scheme, add_targetList, tmpLabelList);
+    // Fill up collections
+        add_targetList.AddRange(add_targets.Split(","));
+        var splitLabels = add_labels.Split(":");
+        for (var index = 0; index < splitLabels.Length; index += 2)
+        {
+            add_labelDict.Add(splitLabels[index], splitLabels[index + 1]);
+        }
+
+    // Create new ProemtheusJob
+    // This is only a workaround
+        var tmpLabelList = new List<ConfigurationComponents.Label>();
+        var prometheusJob = new PrometheusJob(add_jobName, add_scrapeInterval, add_scrapeTimeout,
+            add_metricsPath, add_scheme, add_targetList, tmpLabelList);
 
 
-        // Debug
-        Console.WriteLine(this.add_jobName);
-        Console.WriteLine(this.add_scrapeInterval);
-        Console.WriteLine(this.add_scrapeTimeout);
-        Console.WriteLine(this.add_metricsPath);
-        Console.WriteLine(this.add_scheme);
-        Console.WriteLine(this.add_targetList.ElementAt(0));
-        Console.WriteLine(this.add_labelDict[splitLabels[0]]);
+    // Debug
+        Console.WriteLine(add_jobName);
+        Console.WriteLine(add_scrapeInterval);
+        Console.WriteLine(add_scrapeTimeout);
+        Console.WriteLine(add_metricsPath);
+        Console.WriteLine(add_scheme);
+        Console.WriteLine(add_targetList.ElementAt(0));
+        Console.WriteLine(add_labelDict[splitLabels[0]]);
 
-        // JobObj Debug
+    // JobObj Debug
         Console.WriteLine(prometheusJob.JobName);
         Console.WriteLine(prometheusJob.Scrape_Interval);
 
-        // API Debug
+    // API Debug
         Console.WriteLine(config.scrape_configs[0].job_name);
 
-        // Deserialize Debug
-        //readYamlConfig();
-
+    // Deserialize Debug
+    //readYamlConfig();
     }
 
     public void updateScrapingTarget()
     {
-        // Set defaults where necessary
-        if (this.update_jobName == null || this.update_jobName.Equals("")) { this.update_jobName = "JobDefault"; }
-        if (this.update_scrapeInterval == null || this.update_scrapeInterval.Equals("")) { this.update_scrapeInterval = "10s"; }
-        if (this.update_scrapeTimeout == null || this.update_scrapeTimeout.Equals("")) { this.update_scrapeTimeout = "5s"; }
-        if (this.update_metricsPath == null || this.update_metricsPath.Equals("")) { this.update_metricsPath = "/metrics"; }
-        if (this.update_scheme == null || this.update_scheme.Equals("")) { this.update_scheme = "https"; }
-        if (this.update_targets == null || this.update_targets.Equals("")) { this.update_targets = "192.168.0.1"; }
-        if (this.update_labels == null || this.update_labels.Equals("")) { this.update_labels = "label_1:value_1"; }
-
-        // Fill up collections
-        this.update_targetList.AddRange(this.update_targets.Split(","));
-        string[] splitLabels = this.update_labels.Split(":");
-        for (int index = 0; index < splitLabels.Length; index += 2)
+    // Set defaults where necessary
+        if (update_jobName == null || update_jobName.Equals(""))
         {
-            this.update_labelDict.Add(splitLabels[index], splitLabels[index + 1]);
+            update_jobName = "JobDefault";
+        }
+        if (update_scrapeInterval == null || update_scrapeInterval.Equals(""))
+        {
+            update_scrapeInterval = "10s";
+        }
+        if (update_scrapeTimeout == null || update_scrapeTimeout.Equals(""))
+        {
+            update_scrapeTimeout = "5s";
+        }
+        if (update_metricsPath == null || update_metricsPath.Equals(""))
+        {
+            update_metricsPath = "/metrics";
+        }
+        if (update_scheme == null || update_scheme.Equals(""))
+        {
+            update_scheme = "https";
+        }
+        if (update_targets == null || update_targets.Equals(""))
+        {
+            update_targets = "192.168.0.1";
+        }
+        if (update_labels == null || update_labels.Equals(""))
+        {
+            update_labels = "label_1:value_1";
+        }
+
+    // Fill up collections
+        update_targetList.AddRange(update_targets.Split(","));
+        var splitLabels = update_labels.Split(":");
+        for (var index = 0; index < splitLabels.Length; index += 2)
+        {
+            update_labelDict.Add(splitLabels[index], splitLabels[index + 1]);
         }
 
 
-        // Debug
-        Console.WriteLine(this.update_jobName);
-        Console.WriteLine(this.update_scrapeInterval);
-        Console.WriteLine(this.update_scrapeTimeout);
-        Console.WriteLine(this.update_metricsPath);
-        Console.WriteLine(this.update_scheme);
-        Console.WriteLine(this.update_targetList.ElementAt(0));
-        Console.WriteLine(this.update_labelDict[splitLabels[0]]);
+    // Debug
+        Console.WriteLine(update_jobName);
+        Console.WriteLine(update_scrapeInterval);
+        Console.WriteLine(update_scrapeTimeout);
+        Console.WriteLine(update_metricsPath);
+        Console.WriteLine(update_scheme);
+        Console.WriteLine(update_targetList.ElementAt(0));
+        Console.WriteLine(update_labelDict[splitLabels[0]]);
     }
 
     public void removeScrapingTarget()
     {
-
     }
 
     public async void readYamlConfig()
     {
-        // Read YAML from file
-        //text = await HttpClient.GetStringAsync("Example/PrometheusExampleConfiguration_Small.yml");
-        //PrometheusConfiguration deserializedConfig = PrometheusYamlDeserializer.desirializeToPrometheusConfiguration(text);
+    // Read YAML from file
+    //text = await HttpClient.GetStringAsync("Example/PrometheusExampleConfiguration_Small.yml");
+    //PrometheusConfiguration deserializedConfig = PrometheusYamlDeserializer.desirializeToPrometheusConfiguration(text);
 
-        // Debug
-        //foreach(string rule_file in deserializedConfig.rule_files)
-        //{
-        //    Console.WriteLine(rule_file);
-        //}
-
+    // Debug
+    //foreach(string rule_file in deserializedConfig.rule_files)
+    //{
+    //    Console.WriteLine(rule_file);
+    //}
     }
 
 

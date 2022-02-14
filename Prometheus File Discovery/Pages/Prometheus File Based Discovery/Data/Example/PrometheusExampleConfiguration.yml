@@ -16,7 +16,7 @@ remote_write:
   - url: http://remote1/push
     name: drop_expensive
     write_relabel_configs:
-      - source_labels: [__name__]
+      - source_labels: [ __name__ ]
         regex: expensive.*
         action: drop
     oauth2:
@@ -68,18 +68,18 @@ scrape_configs:
           - bar/*.yaml
 
     static_configs:
-      - targets: ["localhost:9090", "localhost:9191"]
+      - targets: [ "localhost:9090", "localhost:9191" ]
         labels:
           my: label
           your: label
 
     relabel_configs:
-      - source_labels: [job, __meta_dns_name]
+      - source_labels: [ job, __meta_dns_name ]
         regex: (.*)some-[regex]
         target_label: job
         replacement: foo-${1}
         # action defaults to 'replace'
-      - source_labels: [abc]
+      - source_labels: [ abc ]
         target_label: cde
       - replacement: static
         target_label: abc
@@ -114,14 +114,14 @@ scrape_configs:
           - first.dns.address.domain.com
 
     relabel_configs:
-      - source_labels: [job]
+      - source_labels: [ job ]
         regex: (.*)some-[regex]
         action: drop
-      - source_labels: [__address__]
+      - source_labels: [ __address__ ]
         modulus: 8
         target_label: __tmp_hash
         action: hashmod
-      - source_labels: [__tmp_hash]
+      - source_labels: [ __tmp_hash ]
         regex: 1
         action: keep
       - action: labelmap
@@ -132,7 +132,7 @@ scrape_configs:
         regex: k
 
     metric_relabel_configs:
-      - source_labels: [__name__]
+      - source_labels: [ __name__ ]
         regex: expensive_metric.*
         action: drop
 
@@ -141,8 +141,8 @@ scrape_configs:
     consul_sd_configs:
       - server: "localhost:1234"
         token: mysecret
-        services: ["nginx", "cache", "mysql"]
-        tags: ["canary", "v1"]
+        services: [ "nginx", "cache", "mysql" ]
+        tags: [ "canary", "v1" ]
         node_meta:
           rack: "123"
         allow_stale: true
@@ -154,7 +154,7 @@ scrape_configs:
           insecure_skip_verify: false
 
     relabel_configs:
-      - source_labels: [__meta_sd_consul_tags]
+      - source_labels: [ __meta_sd_consul_tags ]
         separator: ","
         regex: label:([^=]+)=([^,]+)
         target_label: ${1}

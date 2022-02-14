@@ -1,276 +1,281 @@
 ﻿using Newtonsoft.Json.Linq;
 
-namespace Prometheus_File_Discovery.Pages.Prometheus_File_Based_Discovery.Model
+namespace Prometheus_File_Discovery.Pages.Prometheus_File_Based_Discovery.Model;
+
+public static class JsonToPrometheusConverter
 {
-    public static class JsonToPrometheusConverter
+    // Fields
+
+
+    // Constructor
+
+
+    // Methods
+    public static PrometheusConfiguration convertJsonToDotNet(dynamic dynamicConfig,
+        PrometheusConfiguration prometheusConfiguration)
     {
+        // dynamicConfig is a JObject
+        // dynamicConfig has JProperties
+        // Jproperties have child values
+        // These Child values are JObjects themselves
 
-        // Fields
+        /* NAMING CONVENTION
+         * - configProperty = elements of the prometheus configuration (global, rule_files, scrape_configs, ...)
+         */
 
-
-        // Constructor
-
-
-        // Methods
-        public static PrometheusConfiguration convertJsonToDotNet(dynamic dynamicConfig, PrometheusConfiguration prometheusConfiguration)
+        // Loop over each attribute to parse it
+        foreach (var configProperty in dynamicConfig.Properties())
         {
-
-            // dynamicConfig is a JObject
-            // dynamicConfig has JProperties
-            // Jproperties have child values
-            // These Child values are JObjects themselves
-
-            // Loop over each attribute to parse it
-            foreach (var property in dynamicConfig.Properties())
+            string configPropertyName = configProperty.Name;
+            switch (configPropertyName)
             {
-                string name = property.Name;
-                switch (name)
-                {
-                    case "global":
-                        // Create new configComponent
-                        ConfigurationComponents.Global global = new ConfigurationComponents.Global();
-                        Console.WriteLine("Parsing global component...");
+                case "global":
+                    // Create new configComponent
+                    var global = new ConfigurationComponents.Global();
+                    Console.WriteLine("Parsing global component...");
 
-                        // Loop over object properties
-                        foreach (JObject val in property.Values<object>())
-                        {
-                            // Check if property has properties itself
-                            if (val.Properties().Any())
+                    // Loop over object properties
+                    foreach (JObject globalComponentValues in configProperty.Values<object>())
+                        // Check if property has properties itself
+                        if (globalComponentValues.Properties().Any())
+                            foreach (var globalComponentProperty in globalComponentValues.Properties())
                             {
-                                foreach (var prop in val.Properties())
+                                // Check for each subtype
+                                var propName = globalComponentProperty.Name;
+                                Console.WriteLine("Parsing " + propName + " of global component...");
+
+                                if (propName == "scrape_interval")
                                 {
-                                    // Check for each subtype
-                                    string propName = prop.Name;
-                                    Console.WriteLine("Parsing " + propName + " of global component...");
-
-                                    if (propName == "scrape_interval") {
-                                        
-                                        global.scrape_interval = prop.Value.ToString();
-                                        Console.WriteLine("Scrape Interval: " + prop.Value.ToString());
-                                    }
-                                    if (propName == "evaluation_interval") {
-                                        global.evaluation_interval = prop.Value.ToString();
-                                        Console.WriteLine("Evaluation Interval: " + prop.Value.ToString());
-                                    }
-                                    // TODO: Support for external_labels
-                                    // if(name.Equals("external_labels")) { global.evaluation_interval = prop.Value.ToString(); }
-
+                                    global.scrape_interval = globalComponentProperty.Value.ToString();
+                                    Console.WriteLine("Scrape Interval: " + globalComponentProperty.Value);
                                 }
-                            }
-                        }
 
-                        // Assign new configComponent
-                        prometheusConfiguration.global = global;
-                        break;
-
-
-                    case "scrape_configs":
-                        // Create new configComponent
-                        // ConfigurationComponents.Scrape_Configs scrape_configs = new ConfigurationComponents.Scrape_Configs();
-                        Console.WriteLine("Parsing scrape_configs component...");
-
-                        // Loop over object properties
-                        foreach (JArray arr in property.Values<object>())
-                        {
-                            // Check if property has properties itself
-                            if (arr.Values().Any())
-                            {
-                                
-                                // Each property is a new PrometheusJob
-                                PrometheusJob prometheusJob = new PrometheusJob();
-                                ConfigurationComponents.Static_Configs static_Configs = new ConfigurationComponents.Static_Configs();
-                                
-                                foreach (JProperty val in arr.Values())
+                                if (propName == "evaluation_interval")
                                 {
-                                    string propName = val.Name;
-                                    string propValue = val.Value.ToString();
-                                    if (propName.Equals("job_name")) { prometheusJob.JobName = propValue; Console.WriteLine("Job Name: " + propValue); }
-                                    if (propName.Equals("scrape_interval")) { prometheusJob.Scrape_Interval = propValue; Console.WriteLine("Scrape Interval: " + propValue); }
-                                    if (propName.Equals("scrape_timeout")) { prometheusJob.Scrape_Timeout = propValue; Console.WriteLine("Scrape Timeout: " + propValue); }
-                                    if (propName.Equals("honor_labels")) { prometheusJob.Honor_Labels = Convert.ToBoolean(propValue); Console.WriteLine("Honor Labels: " + propValue); }
+                                    global.evaluation_interval = globalComponentProperty.Value.ToString();
+                                    Console.WriteLine("Evaluation Interval: " + globalComponentProperty.Value);
+                                }
+                                // if(name.Equals("external_labels")) { global.evaluation_interval = prop.Value.ToString(); }
+                            }
+
+                    // Assign new configComponent
+                    prometheusConfiguration.global = global;
+                    break;
+
+
+                case "scrape_configs":
+                    // Create new configComponent
+                    // Each scrape_config element should represents a prometheus job, according to the docs.
+                    Console.WriteLine("Parsing scrape_configs component...");
+
+                    // Loop over object properties
+                    // The configProperty is actually a list (JArray) containing jobObjects
+                    foreach (JArray jobArray in configProperty.Values<object>())
+                    {
+                        Console.WriteLine("Found Prometheus Jobs: " + jobArray.Count);
+                        if (jobArray.Values().Any())
+                        {
+                            var count = 0;
+                            // foreach (JProperty jobProperty in jobArray.Values())
+                            foreach (JObject job in jobArray.Children())
+                            {
+                                var prometheusJob = new PrometheusJob();
+                                count++;
+                                // TODO: Continue here, 10.02.22
+                                // Each object is a new PrometheusJob, parse it's data
+                                foreach (var jobProperty in job.Properties())
+                                {
+                                    var propName = jobProperty.Name;
+                                    var propValue = jobProperty.Value.ToString();
+
+                                    if (propName.Equals("job_name"))
+                                    {
+                                        prometheusJob.JobName = propValue;
+                                        Console.WriteLine("Job Name: " + propValue);
+                                    }
+
+                                    if (propName.Equals("scrape_interval"))
+                                    {
+                                        prometheusJob.Scrape_Interval = propValue;
+                                        Console.WriteLine("Scrape Interval: " + propValue);
+                                    }
+
+                                    if (propName.Equals("scrape_timeout"))
+                                    {
+                                        prometheusJob.Scrape_Timeout = propValue;
+                                        Console.WriteLine("Scrape Timeout: " + propValue);
+                                    }
+
+                                    if (propName.Equals("honor_labels"))
+                                    {
+                                        prometheusJob.Honor_Labels = Convert.ToBoolean(propValue);
+                                        Console.WriteLine("Honor Labels: " + propValue);
+                                    }
+
                                     if (propName.Equals("static_configs"))
                                     {
-                                        
-                                        foreach (JObject jObj in val.Value)
+                                        // Each static config element is a list of JProperties, so we need to iterate
+                                        Console.WriteLine("Reading static_configs...");
+
+                                        foreach (JObject staticConfigJObject in jobProperty.Values())
                                         {
+                                            var static_Configs = new ConfigurationComponents.Static_Configs();
+                                            Console.WriteLine("staticConfigObject: " + staticConfigJObject);
+
                                             // Loop over each property
-                                            foreach (JProperty jProp in jObj.Properties())
+                                            foreach (var staticConfigProperty in staticConfigJObject.Properties())
                                             {
-                                                string propName2 = jProp.Name;
-                                                if (propName2 == "targets")
+                                                var staticConfigPropertyName = staticConfigProperty.Name;
+
+                                                // Target list
+                                                if (staticConfigPropertyName == "targets")
                                                 {
-                                                    Console.WriteLine("Targets:");
-                                                    foreach(JValue jVal in jProp.Values())
+                                                    Console.Write("Targets: ");
+                                                    foreach (JValue jVal in staticConfigProperty.Values())
                                                     {
-                                                        prometheusJob.addTarget(jVal.ToString());
                                                         static_Configs.targets.Add(jVal.ToString());
                                                         Console.WriteLine(jVal.ToString());
                                                     }
                                                 }
 
-                                                if (propName2 == "labels")
+                                                // Labels
+                                                if (staticConfigPropertyName == "labels")
                                                 {
-                                                    Console.WriteLine("Labels:");
-                                                    foreach(dynamic jVal in jProp.Values())
+                                                    Console.Write("Labels: ");
+                                                    foreach (dynamic jVal in staticConfigProperty.Values())
                                                     {
                                                         string key = jVal.Name.ToString();
                                                         string value = jVal.Value.ToString();
                                                         Console.WriteLine(key + ":" + value);
                                                         static_Configs.labels.Add(key, value);
-                                                        prometheusJob.addLabel(key, value);
                                                     }
                                                 }
+
+                                                prometheusJob.Static_Configs.Add(static_Configs);
                                             }
                                         }
-                                        prometheusJob.Static_Configs.Add(static_Configs);
                                     }
-                                    // Assign new configComponent
-                                    Console.WriteLine("Debug Line 127");
-                                    ConfigurationComponents.Scrape_Configs
-                                        scrapeConfig = prometheusJob.toScrapeConfig();
-                                    prometheusConfiguration.scrape_configs.Add(scrapeConfig); // This produces nullpointerexception
-                                    Console.WriteLine("Debug Line 129");
                                 }
+                                // Assign new configComponent
+                                ConfigurationComponents.Scrape_Configs
+                                    scrapeConfig = prometheusJob.toScrapeConfigObject();
+                                prometheusConfiguration.scrape_configs.Add(scrapeConfig); // This produces nullpointerexception
                             }
                         }
-
-                        
-                        break;
+                    }
 
 
-                    case "alerting":
-                        // Create new configComponent
-                        ConfigurationComponents.Alerting alerting = new ConfigurationComponents.Alerting();
-                        Console.WriteLine("Parsing alerting component...");
+                    break;
 
-                        // Check if not empty
-                        if(property.HasValues)
+
+                case "alerting":
+                    // Create new configComponent
+                    var alerting = new ConfigurationComponents.Alerting();
+                    Console.WriteLine("Parsing alerting component...");
+
+                    // Check if not empty
+                    if (configProperty.HasValues)
+                        foreach (var val in configProperty.Values<dynamic>())
+                            // Goes into the 'alertmanagers' object
+                        foreach (var val2 in val.Values<dynamic>())
                         {
-                            
-                            foreach(dynamic val in property.Values<dynamic>())
+                            var alertManager = new ConfigurationComponents.Alertmanager();
+                            Console.WriteLine("Alerting property name: " + val2.Name);
+                            var objType = val2.GetType();
+
+                            // TODO: Multiple alertmanager-objects can be passed.
+                            if (val2.GetType() == typeof(JArray)) Console.WriteLine("Alerting value type: JArray");
+
+                            // Single alertmanager-object
+                            if (val2.GetType() == typeof(JProperty))
                             {
-                                // Goes into the 'alertmanagers' object
-                                foreach (dynamic val2 in val.Values<dynamic>())
+                                Console.WriteLine("Alerting value type: JProperty");
+
+                                // Get values of alertmanagers object
+                                foreach (var val3 in val2.Values<dynamic>())
+                                    // val3 is JArray
+                                    // Console.WriteLine(val3.GetType());
+                                    // Console.WriteLine(val3.ToString());
+
+                                foreach (var arrVal in val3.Values<dynamic>())
+                                    //JArray contains Jobjects
+                                foreach (var arrObj in arrVal.Values<dynamic>())
                                 {
-                                    ConfigurationComponents.Alertmanager alertManager = new ConfigurationComponents.Alertmanager();
-                                    Console.WriteLine("Alerting property name: " + val2.Name);
-                                    dynamic objType = val2.GetType();
+                                    string arrObjName = arrObj.Name;
 
-                                    // TODO: Multiple alertmanager-objects can be passed.
-                                    if (val2.GetType() == typeof(Newtonsoft.Json.Linq.JArray))
+                                    // Scheme object
+                                    if (arrObjName == "scheme")
                                     {
-                                        Console.WriteLine("Alerting value type: JArray");
+                                        Console.WriteLine("Alertmanager scheme: " + arrObj.Value.ToString());
+                                        alertManager.scheme = arrObj.Value.ToString();
                                     }
 
-                                    // Single alertmanager-object
-                                    if (val2.GetType() == typeof(Newtonsoft.Json.Linq.JProperty))
+                                    // Static_configs object
+                                    var static_Configs = new ConfigurationComponents.Static_Configs();
+                                    if (arrObjName == "static_configs")
                                     {
-                                        Console.WriteLine("Alerting value type: JProperty");
-                                        
-                                        // Get values of alertmanagers object
-                                        foreach(dynamic val3 in val2.Values<dynamic>())
+                                        Console.WriteLine(arrObjName);
+                                        foreach (JObject jObj in arrObj.Value)
+                                            // Console.WriteLine("JValue Type: " + jObj.GetType());
+                                            // Loop over each property
+                                        foreach (dynamic jProp in jObj.Properties())
                                         {
-                                            // val3 is JArray
-                                            // Console.WriteLine(val3.GetType());
-                                            // Console.WriteLine(val3.ToString());
-
-                                            foreach(dynamic arrVal in val3.Values<dynamic>())
+                                            string propName2 = jProp.Name;
+                                            Console.WriteLine(propName2);
+                                            if (propName2 == "targets")
                                             {
-                                                //JArray contains Jobjects
-                                                foreach(dynamic arrObj in arrVal.Values<dynamic>())
+                                                Console.WriteLine("Targets:");
+                                                foreach (JArray jVal in jProp.Values<dynamic>())
+                                                foreach (var jArrVal in jVal.Value<dynamic>())
                                                 {
-                                                    string arrObjName = arrObj.Name;
+                                                    Console.WriteLine(jArrVal.ToString());
+                                                    static_Configs.targets.Add(jArrVal.ToString());
+                                                }
+                                            }
 
-                                                    // Scheme object
-                                                    if(arrObjName == "scheme")
-                                                    {
-                                                        Console.WriteLine("Alertmanager scheme: " + arrObj.Value.ToString());
-                                                        alertManager.scheme = arrObj.Value.ToString();
-                                                    }
-
-                                                    // Static_configs object
-                                                    ConfigurationComponents.Static_Configs static_Configs = new ConfigurationComponents.Static_Configs();
-                                                    if (arrObjName == "static_configs")
-                                                    {
-                                                        Console.WriteLine(arrObjName);
-                                                        foreach(JObject jObj in arrObj.Value)
-                                                        {
-                                                            // Console.WriteLine("JValue Type: " + jObj.GetType());
-                                                            // Loop over each property
-                                                            foreach (dynamic jProp in jObj.Properties())
-                                                            {
-                                                                string propName2 = jProp.Name;
-                                                                Console.WriteLine(propName2);
-                                                                if (propName2 == "targets")
-                                                                {
-                                                                    Console.WriteLine("Targets:");
-                                                                    foreach (JArray jVal in jProp.Values<dynamic>())
-                                                                    {
-                                                                        
-                                                                        foreach(dynamic jArrVal in jVal.Value<dynamic>())
-                                                                        {
-                                                                            Console.WriteLine(jArrVal.ToString());
-                                                                            static_Configs.targets.Add(jArrVal.ToString());
-                                                                        }
-                                                                    }
-                                                                }
-
-                                                                if (propName2 == "labels")
-                                                                {
-                                                                    Console.WriteLine("Labels:");
-                                                                    foreach (dynamic jVal in jProp.Values())
-                                                                    {
-                                                                        string key = jVal.Name.ToString();
-                                                                        string value = jVal.Value.ToString();
-                                                                        Console.WriteLine(key + ":" + value);
-                                                                        static_Configs.labels.Add(key, value);
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                    alertManager.static_configs.Add(static_Configs);
+                                            if (propName2 == "labels")
+                                            {
+                                                Console.WriteLine("Labels:");
+                                                foreach (var jVal in jProp.Values())
+                                                {
+                                                    string key = jVal.Name.ToString();
+                                                    string value = jVal.Value.ToString();
+                                                    Console.WriteLine(key + ":" + value);
+                                                    static_Configs.labels.Add(key, value);
                                                 }
                                             }
                                         }
-
                                     }
+
+                                    alertManager.static_configs.Add(static_Configs);
                                 }
-                                
-
                             }
                         }
 
-                        // Assign new configComponent
-                        prometheusConfiguration.alerting = alerting;
-                        break;
+                    // Assign new configComponent
+                    prometheusConfiguration.alerting = alerting;
+                    break;
 
 
-                    case "rule_files":
-                        // Create new configComponent
-                        List<string> ruleFiles = new List<string>();
-                        Console.WriteLine("Parsing rule_files component...");
+                case "rule_files":
+                    // Create new configComponent
+                    var ruleFiles = new List<string>();
+                    Console.WriteLine("Parsing rule_files component...");
 
-                        // Looop over property values
-                        foreach(JArray jArr in property.Values<dynamic>())
-                        {
-                            foreach(dynamic jArrVal in jArr.Value<dynamic>())
-                            {
-                                Console.WriteLine("Rule Files: " + jArrVal.ToString());
-                                ruleFiles.Add(jArrVal.ToString());
-                            }
-                           
-                        }
+                    // Looop over property values
+                    foreach (JArray jArr in configProperty.Values<dynamic>())
+                    foreach (var jArrVal in jArr.Value<dynamic>())
+                    {
+                        Console.WriteLine("Rule Files: " + jArrVal.ToString());
+                        ruleFiles.Add(jArrVal.ToString());
+                    }
 
-                        // Assign new configComponent
-                        prometheusConfiguration.rule_files = ruleFiles;
-                        break;
-
-                }
-
+                    // Assign new configComponent
+                    prometheusConfiguration.rule_files = ruleFiles;
+                    break;
             }
-            return prometheusConfiguration;
         }
 
+        return prometheusConfiguration;
     }
 }

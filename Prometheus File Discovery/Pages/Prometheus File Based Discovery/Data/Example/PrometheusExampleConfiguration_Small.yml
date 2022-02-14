@@ -5,12 +5,12 @@ scrape_configs:
     scrape_interval: 5s
     scrape_timeout: 4s
     static_configs:
-      - targets: ['localhost:9090']
+      - targets: [ 'localhost:9090' ]
         labels:
           label_1: 'value_1'
           label_2: 'value_2'
           label_3: 'value_3'
-      - targets: ['localhost:9091']
+      - targets: [ 'localhost:9091' ]
         labels:
           label_4: 'value_4'
           label_5: 'value_5'
@@ -19,21 +19,21 @@ scrape_configs:
     scrape_interval: 8s
     scrape_timeout: 7s
     static_configs:
-      - targets: ['localhost:9092']
+      - targets: [ 'localhost:9092' ]
         labels:
           label_7: 'value_7'
           label_8: 'value_8'
           label_9: 'value_9'
-      - targets: ['localhost:9093']
+      - targets: [ 'localhost:9093' ]
         labels:
           label_10: 'value_10'
           label_11: 'value_11'
           label_12: 'value_12'
 alerting:
   alertmanagers:
-  - scheme: http
-    static_configs:
-    - targets
-      - 'localhost:9094'
+    - scheme: http
+      static_configs:
+        - targets
+          - 'localhost:9094'
 rule_files:
   - 'prometheus_alerting_rules.yml'
